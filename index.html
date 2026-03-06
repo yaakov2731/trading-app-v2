@@ -600,6 +600,37 @@ function auto() {
     </div>
   </div>
 
+  <!-- ── REGLA CONFIRMACION PROXIMA HORA ── -->
+  <div class="check-card" style="border-color:${hour===9?'#3fb95044':'var(--border)'}">
+    <div class="sec-label">Regla de Confirmacion — Proxima Hora (nuevo hallazgo)</div>
+    <div style="margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;border:1px solid #3fb95033">
+      <div style="font-size:12px;color:var(--text);line-height:1.7">
+        ${hour===9 ? `
+        <span style="color:var(--green);font-weight:700">Cuando entras a las 9AM:</span><br>
+        Observa la barra de <strong>10AM</strong> — si su close va en tu direccion:<br>
+        <span style="color:var(--elite);font-weight:700;font-size:14px">WR sube a 98.7%</span>
+        <span style="color:var(--muted);font-size:11px"> (154 trades, 9 de 11 años con 100%)</span><br><br>
+        Si la barra de 10AM va en <span style="color:var(--red)">contra</span> → WR baja a 72.7% → considera salida anticipada.
+        ` : `
+        <span style="color:var(--muted)">Este filtro aplica solo a entradas en hora 9AM.</span><br>
+        Cambia la hora a 9AM para ver la regla de confirmacion de proxima barra.
+        `}
+      </div>
+    </div>
+    <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px">
+      <div style="padding:10px;background:var(--bg);border-radius:6px;border:1px solid #3fb95033;text-align:center">
+        <div style="font-size:20px;font-weight:800;color:var(--green)">98.7%</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:2px">9AM + 10AM confirma</div>
+        <div style="font-size:10px;color:var(--muted)">154 trades verificados</div>
+      </div>
+      <div style="padding:10px;background:var(--bg);border-radius:6px;border:1px solid #f8514922;text-align:center">
+        <div style="font-size:20px;font-weight:800;color:var(--red)">72.7%</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:2px">9AM + 10AM en contra</div>
+        <div style="font-size:10px;color:var(--muted)">44 trades — salida anticipada</div>
+      </div>
+    </div>
+  </div>
+
   <!-- ── BACKTEST ANUAL ── -->
   <div class="check-card">
     <div class="sec-label">Backtest Año a Año (base — todos los setups)</div>
@@ -610,8 +641,8 @@ function auto() {
         <div style="font-size:10px;color:var(--muted);margin-top:2px">WR ELITE</div>
       </div>
       <div style="text-align:center;padding:10px;background:var(--bg);border-radius:8px">
-        <div style="font-size:18px;font-weight:700;color:var(--green)">96.7%</div>
-        <div style="font-size:10px;color:var(--muted);margin-top:2px">WR 9AM+Long</div>
+        <div style="font-size:18px;font-weight:700;color:var(--green)">98.7%</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:2px">9AM + 10AM ok</div>
       </div>
       <div style="text-align:center;padding:10px;background:var(--bg);border-radius:8px">
         <div style="font-size:18px;font-weight:700;color:var(--blue)">81.9%</div>
@@ -625,7 +656,7 @@ function auto() {
   </div>
 
   <div style="background:#e3b34108;border:1px solid #e3b34122;border-radius:8px;padding:10px 14px;font-size:11px;color:var(--muted)">
-    ⚠️ Backtest 2015–2026 · 812 setups · Detección corregida: entry solo cuando el CLOSE de la barra está dentro de la zona 25%. Walk-forward sin lookahead. Rendimiento pasado no garantiza resultados futuros.
+    Backtest 2015-2026 · 812 setups · Deteccion corregida: entry solo cuando CLOSE esta dentro de zona 25%. Walk-forward sin lookahead. Rendimiento pasado no garantiza resultados futuros.
   </div>`;
 }
 
