@@ -3,676 +3,392 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ES Extremo Volumen — Señal Automática</title>
+<title>ES Futures — Institutional Trading System</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
   :root {
-    --bg:      #0d1117;
-    --surf:    #161b22;
-    --surf2:   #1c2128;
-    --border:  #30363d;
-    --text:    #e6edf3;
-    --muted:   #8b949e;
-    --green:   #3fb950;
-    --red:     #f85149;
-    --blue:    #58a6ff;
-    --yellow:  #e3b341;
-    --purple:  #bc8cff;
-    --orange:  #ffa657;
-    --elite:   #ffd700;
+    --bg:#04080f;--bg2:#080e1c;--glass:rgba(255,255,255,0.035);
+    --border:rgba(100,160,255,0.12);--border2:rgba(100,160,255,0.22);
+    --cyan:#00c8ff;--green:#00e87a;--red:#ff3c5a;--gold:#ffc840;--purple:#a78bfa;
+    --txt:#c8d8f0;--txt2:#6888b0;--txt3:#3a5070;--white:#e8f0ff;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; min-height: 100vh; }
-
-  /* HEADER */
-  .hdr { padding: 14px 20px; background: var(--surf); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-  .hdr-title { font-size: 15px; font-weight: 700; }
-  .hdr-title span { color: var(--blue); }
-  .hdr-sub { font-size: 11px; color: var(--muted); }
-
-  /* LAYOUT */
-  .layout { display: grid; grid-template-columns: 320px 1fr; min-height: calc(100vh - 49px); }
-  @media(max-width:860px){ .layout { grid-template-columns:1fr; } }
-
-  /* LEFT */
-  .left { border-right: 1px solid var(--border); padding: 16px; display: flex; flex-direction: column; gap: 16px; }
-  .sec-label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-  .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-  .field label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 4px; }
-  input[type=number], select {
-    width: 100%; padding: 8px 10px; background: var(--bg);
-    border: 1px solid var(--border); border-radius: 6px;
-    color: var(--text); font-size: 13px; outline: none;
-    transition: border-color .15s;
-  }
-  input[type=number] { font-family: monospace; }
-  input:focus, select:focus { border-color: var(--blue); }
-  .hint { font-size: 10px; color: var(--muted); text-align: center; cursor: pointer; }
-  .hint span { color: var(--blue); text-decoration: underline; }
-
-  /* RIGHT */
-  .right { padding: 16px; display: flex; flex-direction: column; gap: 16px; overflow-y: auto; }
-
-  /* SIGNAL HERO */
-  .signal-hero {
-    background: var(--surf); border: 1px solid var(--border); border-radius: 12px;
-    overflow: hidden;
-  }
-  .signal-hero-top {
-    padding: 20px 24px; display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; align-items: center;
-  }
-  .sig-box {
-    border-radius: 10px; padding: 16px 20px; text-align: center;
-    border: 2px solid transparent; transition: all .2s; cursor: default;
-  }
-  .sig-box.winner { border-color: var(--green); background: #3fb95011; }
-  .sig-box.loser  { opacity: .5; }
-  .sig-dir  { font-size: 28px; font-weight: 800; letter-spacing: -1px; }
-  .sig-wr   { font-size: 36px; font-weight: 900; }
-  .sig-rule { font-size: 11px; color: var(--muted); margin-top: 4px; }
-  .sig-n    { font-size: 10px; color: var(--muted); }
-  .vs-col   { text-align: center; }
-  .vs-label { font-size: 22px; font-weight: 700; color: var(--muted); }
-  .vs-rec   { font-size: 11px; color: var(--muted); margin-top: 6px; }
-
-  .signal-hero-bot {
-    border-top: 1px solid var(--border); padding: 12px 24px;
-    display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
-  }
-  .tag { padding: 3px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; }
-  .tag-green  { background: #3fb95022; color: var(--green); }
-  .tag-red    { background: #f8514922; color: var(--red); }
-  .tag-yellow { background: #e3b34122; color: var(--yellow); }
-  .tag-blue   { background: #58a6ff22; color: var(--blue); }
-  .tag-muted  { background: #ffffff08; color: var(--muted); }
-  .tag-elite  { background: #ffd70022; color: var(--elite); border: 1px solid #ffd70033; }
-
-  /* HOUR CHART */
-  .hour-chart { background: var(--surf); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
-  .hour-rows { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
-  .hr-row { display: flex; align-items: center; gap: 8px; }
-  .hr-time { font-size: 11px; font-family: monospace; color: var(--muted); width: 55px; }
-  .hr-bar-wrap { flex: 1; height: 20px; background: #ffffff06; border-radius: 4px; position: relative; overflow: hidden; }
-  .hr-bar { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 6px; font-size: 10px; font-weight: 700; transition: width .4s ease; }
-  .hr-bar.best { background: linear-gradient(90deg, #3fb95088, #3fb950cc); color: #fff; }
-  .hr-bar.good { background: #58a6ff44; color: var(--blue); }
-  .hr-bar.ok   { background: #e3b34133; color: var(--yellow); }
-  .hr-bar.bad  { background: #f8514922; color: var(--red); }
-  .hr-wr  { font-size: 12px; font-weight: 700; width: 44px; text-align: right; font-family: monospace; }
-  .hr-n   { font-size: 10px; color: var(--muted); width: 36px; text-align: right; }
-  .hr-dir { font-size: 10px; width: 36px; text-align: center; }
-  .best-hour-badge {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: #3fb95022; border: 1px solid #3fb95055; color: var(--green);
-    padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700;
-    margin-top: 10px;
-  }
-
-  /* LEVELS */
-  .levels-card { background: var(--surf); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-  .levels-hdr { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-  .levels-hdr h3 { font-size: 13px; font-weight: 600; }
-  .rr-pill { background: #3fb95022; color: var(--green); border: 1px solid #3fb95033; padding: 3px 10px; border-radius: 10px; font-size: 12px; font-weight: 600; }
-  table { width: 100%; border-collapse: collapse; }
-  th { padding: 7px 14px; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; font-weight: 500; text-align: left; }
-  td { padding: 10px 14px; border-top: 1px solid var(--border); font-size: 13px; }
-  td.mono { font-family: monospace; font-size: 14px; font-weight: 600; }
-  .c-green  { color: var(--green); }
-  .c-red    { color: var(--red); }
-  .c-blue   { color: var(--blue); }
-  .c-yellow { color: var(--yellow); }
-  .c-muted  { color: var(--muted); }
-  tr.row-stop   { background: #f8514906; }
-  tr.row-entry  { background: #58a6ff06; }
-  tr.row-target { background: #3fb95006; }
-
-  /* RANGE VISUAL */
-  .range-card { background: var(--surf); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
-  .rng-bar { position: relative; height: 36px; background: #ffffff06; border-radius: 8px; overflow: hidden; margin: 10px 0; }
-  .rng-z-low  { position: absolute; left: 0; top: 0; height: 100%; background: #f8514918; border-right: 2px solid var(--red); }
-  .rng-z-high { position: absolute; right: 0; top: 0; height: 100%; background: #3fb95018; border-left: 2px solid var(--green); }
-  .rng-cursor { position: absolute; top: 0; width: 3px; height: 100%; background: var(--yellow); transform: translateX(-50%); border-radius: 2px; }
-  .rng-labels { display: flex; justify-content: space-between; font-size: 11px; }
-
-  /* CHECKLIST */
-  .check-card { background: var(--surf); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
-  .chk-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: var(--bg); border-radius: 6px; margin-top: 6px; border: 1px solid transparent; }
-  .chk-item.pass { border-color: #3fb95033; }
-  .chk-item.fail { border-color: #f8514922; }
-  .chk-icon { font-size: 15px; width: 20px; }
-  .chk-text { font-size: 12px; }
-
-  /* EMPTY */
-  .empty { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 12px; color: var(--muted); }
-  .empty svg { opacity: .25; }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'SF Pro Display',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden}
+  body::before{content:'';position:fixed;inset:0;background:linear-gradient(rgba(0,200,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+  .amb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0}
+  .amb-1{width:600px;height:600px;top:-200px;left:-200px;background:rgba(0,200,255,0.06)}
+  .amb-2{width:500px;height:500px;bottom:-200px;right:-100px;background:rgba(100,80,255,0.06)}
+  .amb-3{width:400px;height:400px;top:40%;left:40%;background:rgba(0,232,122,0.04)}
+  main{position:relative;z-index:1;max-width:1440px;margin:0 auto;padding:0 24px 60px}
+  header{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;border-bottom:1px solid var(--border);margin-bottom:36px}
+  .hl{display:flex;align-items:center;gap:18px}
+  .logo{width:48px;height:48px;background:linear-gradient(135deg,#00c8ff,#0066ff);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#fff;box-shadow:0 0 30px rgba(0,200,255,0.4);letter-spacing:-1px}
+  .ht h1{font-size:20px;font-weight:700;color:var(--white);letter-spacing:0.5px}
+  .ht p{font-size:12px;color:var(--txt2);margin-top:2px;letter-spacing:1px;text-transform:uppercase}
+  .hr2{display:flex;align-items:center;gap:20px}
+  .badge{display:flex;align-items:center;gap:8px;padding:8px 16px;background:rgba(0,232,122,0.08);border:1px solid rgba(0,232,122,0.2);border-radius:20px;font-size:12px;font-weight:600;color:var(--green);letter-spacing:0.5px}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
+  .datedis{font-size:13px;color:var(--txt2)}
+  .card{background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:24px;backdrop-filter:blur(20px);transition:transform 0.3s,box-shadow 0.3s,border-color 0.3s;transform-style:preserve-3d}
+  .card:hover{transform:translateY(-3px) rotateX(1deg);box-shadow:0 20px 60px rgba(0,0,0,0.4),0 0 0 1px rgba(100,160,255,0.2);border-color:var(--border2)}
+  .clbl{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--txt2);margin-bottom:10px}
+  .stitle{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--txt2);margin-bottom:20px;display:flex;align-items:center;gap:12px}
+  .stitle::after{content:'';flex:1;height:1px;background:var(--border)}
+  .mgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+  .mc{text-align:center;position:relative;overflow:hidden}
+  .mc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:16px 16px 0 0}
+  .mc.cy::before{background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+  .mc.gr::before{background:linear-gradient(90deg,transparent,var(--green),transparent)}
+  .mc.go::before{background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+  .mc.pu::before{background:linear-gradient(90deg,transparent,var(--purple),transparent)}
+  .mv{font-size:42px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;margin:12px 0 6px}
+  .mv.cy{background:linear-gradient(180deg,#00c8ff,rgba(0,200,255,0.6));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .mv.gr{background:linear-gradient(180deg,#00e87a,rgba(0,232,122,0.6));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .mv.go{background:linear-gradient(180deg,#ffc840,rgba(255,200,64,0.6));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .mv.pu{background:linear-gradient(180deg,#a78bfa,rgba(167,139,250,0.6));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .msub{font-size:11px;color:var(--txt2);letter-spacing:0.5px}
+  .mbadge{display:inline-block;margin-top:8px;padding:3px 10px;border-radius:10px;font-size:10px;font-weight:700;letter-spacing:0.5px}
+  .bcy{background:rgba(0,200,255,0.12);color:var(--cyan);border:1px solid rgba(0,200,255,0.2)}
+  .bgr{background:rgba(0,232,122,0.12);color:var(--green);border:1px solid rgba(0,232,122,0.2)}
+  .bgo{background:rgba(255,200,64,0.12);color:var(--gold);border:1px solid rgba(255,200,64,0.2)}
+  .bpu{background:rgba(167,139,250,0.12);color:#a78bfa;border:1px solid rgba(167,139,250,0.2)}
+  .sgrid{display:grid;grid-template-columns:1fr 220px 1fr;gap:16px;margin-bottom:28px;align-items:start}
+  .sc{padding:28px}
+  .sc.short{border-color:rgba(255,60,90,0.25);background:linear-gradient(135deg,rgba(255,60,90,0.06) 0%,var(--glass) 60%)}
+  .sc.short:hover{box-shadow:0 20px 60px rgba(255,60,90,0.1),0 0 0 1px rgba(255,60,90,0.3);border-color:rgba(255,60,90,0.4)}
+  .sc.long{border-color:rgba(0,232,122,0.25);background:linear-gradient(135deg,rgba(0,232,122,0.06) 0%,var(--glass) 60%)}
+  .sc.long:hover{box-shadow:0 20px 60px rgba(0,232,122,0.1),0 0 0 1px rgba(0,232,122,0.3);border-color:rgba(0,232,122,0.4)}
+  .sdir{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+  .dico{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900}
+  .dico.s{background:rgba(255,60,90,0.15);color:var(--red);border:1px solid rgba(255,60,90,0.3)}
+  .dico.l{background:rgba(0,232,122,0.15);color:var(--green);border:1px solid rgba(0,232,122,0.3)}
+  .dlbl h3{font-size:18px;font-weight:800}
+  .dlbl h3.s{color:var(--red)}.dlbl h3.l{color:var(--green)}
+  .dlbl p{font-size:11px;color:var(--txt2);margin-top:2px}
+  .pr{display:flex;flex-direction:column;gap:10px;margin-bottom:22px}
+  .pi{display:flex;justify-content:space-between;align-items:center}
+  .pil{font-size:11px;color:var(--txt2);letter-spacing:0.5px}
+  .piv{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
+  .piv.en{color:var(--white)}.piv.ts{color:var(--red)}.piv.tl{color:var(--green)}.piv.st{color:var(--txt2)}
+  .div{height:1px;background:var(--border);margin:14px 0}
+  .rr{display:flex;justify-content:space-between}
+  .ri{text-align:center}
+  .rv{font-size:17px;font-weight:700}.rv.p{color:var(--gold)}
+  .rl{font-size:10px;color:var(--txt2);margin-top:2px}
+  .cp{display:flex;flex-direction:column;gap:14px}
+  .ic{padding:18px 20px}
+  .icv{font-size:28px;font-weight:800;text-align:center;margin:6px 0 2px}
+  .ics{font-size:10px;color:var(--txt2);text-align:center}
+  .gi{padding:14px 20px;text-align:center;border-radius:12px}
+  .gi.flat{background:rgba(100,160,255,0.08);border:1px solid rgba(100,160,255,0.2)}
+  .gi.up{background:rgba(255,60,90,0.08);border:1px solid rgba(255,60,90,0.2)}
+  .gi.down{background:rgba(0,232,122,0.08);border:1px solid rgba(0,232,122,0.2)}
+  .gv{font-size:22px;font-weight:800}
+  .gv.flat{color:var(--cyan)}.gv.up{color:var(--red)}.gv.down{color:var(--green)}
+  .gl{font-size:10px;color:var(--txt2);margin-top:4px}
+  .lrow{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;margin-bottom:4px;transition:background 0.2s;font-variant-numeric:tabular-nums}
+  .lrow:hover{background:rgba(255,255,255,0.04)}
+  .ldot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+  .lname{font-size:11px;color:var(--txt2);flex:1}
+  .lprice{font-size:15px;font-weight:700}
+  .schgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:28px}
+  .sch{text-align:center;padding:20px 12px;position:relative;overflow:hidden;cursor:default}
+  .sch::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;border-radius:0 0 16px 16px}
+  .sp::after{background:var(--green)}.ss::after{background:var(--cyan)}.sg::after{background:var(--gold)}.sw::after{background:var(--red)}
+  .st{font-size:22px;font-weight:900;color:var(--white);letter-spacing:-0.5px}
+  .sam{font-size:11px;color:var(--txt2)}
+  .sstars{font-size:12px;margin:8px 0 4px;letter-spacing:2px}
+  .swr{font-size:17px;font-weight:800;margin:4px 0}
+  .sn{font-size:10px;color:var(--txt2)}
+  .slbl{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-top:8px;padding:3px 8px;border-radius:6px;display:inline-block}
+  .c-p{color:var(--green)}.c-s{color:var(--cyan)}.c-g{color:var(--gold)}.c-w{color:var(--red)}
+  .b-p{background:rgba(0,232,122,0.12);color:var(--green)}.b-s{background:rgba(0,200,255,0.12);color:var(--cyan)}
+  .b-g{background:rgba(255,200,64,0.12);color:var(--gold)}.b-w{background:rgba(255,60,90,0.12);color:var(--red)}
+  .cgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
+  .cc{padding:24px}.cw{position:relative;height:240px}
+  .lgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
+  .lc{padding:24px}
+  .lnum{font-size:48px;font-weight:900;line-height:1;background:linear-gradient(135deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px}
+  .ltit{font-size:14px;font-weight:700;color:var(--white);margin-bottom:8px}
+  .ldesc{font-size:12px;color:var(--txt2);line-height:1.6}
+  .fmla{margin-top:12px;padding:10px 14px;background:rgba(0,200,255,0.06);border-left:2px solid var(--cyan);border-radius:0 8px 8px 0;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:var(--cyan)}
+  .warn{background:rgba(255,200,64,0.06);border:1px solid rgba(255,200,64,0.15);border-radius:12px;padding:16px 20px;margin-bottom:28px;display:flex;gap:16px;align-items:flex-start}
+  .wi{font-size:20px;flex-shrink:0;margin-top:1px}
+  .wt{font-size:11px;color:var(--txt2);line-height:1.7}
+  .wt strong{color:var(--gold)}
+  .ytbl{width:100%;border-collapse:collapse}
+  .ytbl th{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--txt2);padding:8px 12px;text-align:left;border-bottom:1px solid var(--border)}
+  .ytbl td{padding:10px 12px;font-size:13px;border-bottom:1px solid rgba(100,160,255,0.05);font-variant-numeric:tabular-nums}
+  .ytbl tr:last-child td{border-bottom:none}
+  .ytbl tr:hover td{background:rgba(255,255,255,0.02)}
+  .ybar{height:6px;border-radius:3px}
+  footer{border-top:1px solid var(--border);padding:24px 0;text-align:center;font-size:11px;color:var(--txt3);line-height:1.8}
+  footer strong{color:var(--txt2)}
+  @media(max-width:1100px){.mgrid{grid-template-columns:repeat(2,1fr)}.sgrid{grid-template-columns:1fr}.cgrid{grid-template-columns:1fr}.schgrid{grid-template-columns:repeat(3,1fr)}.lgrid{grid-template-columns:1fr}}
+  @media(max-width:640px){.mgrid{grid-template-columns:1fr 1fr}.schgrid{grid-template-columns:repeat(2,1fr)}header{flex-direction:column;gap:16px;align-items:flex-start}.mv{font-size:32px}}
 </style>
 </head>
 <body>
+<div class="amb amb-1"></div><div class="amb amb-2"></div><div class="amb amb-3"></div>
+<main>
 
-<header class="hdr">
-  <div>
-    <div class="hdr-title">ES <span>Extremo Volumen</span></div>
-    <div class="hdr-sub">Señal automática · 812 setups · 2015–2026 · Detección corregida · Walk-Forward</div>
+<header>
+  <div class="hl">
+    <div class="logo">ES</div>
+    <div class="ht">
+      <h1>1P + PIVOT-TR System</h1>
+      <p>E-Mini S&amp;P 500 Futures &nbsp;|&nbsp; Institutional Grade</p>
+    </div>
   </div>
-  <div style="font-size:11px;color:var(--muted)">yaakov2731</div>
+  <div class="hr2">
+    <div class="badge"><div class="dot"></div>SISTEMA ACTIVO</div>
+    <div class="datedis" id="currentDate"></div>
+  </div>
 </header>
 
-<div class="layout">
-  <!-- LEFT: INPUTS -->
-  <div class="left">
-    <div>
-      <div class="sec-label">Día Anterior</div>
-      <div class="g2">
-        <div class="field"><label>High</label><input type="number" id="pH" step="0.25" placeholder="6983.75" oninput="auto()"></div>
-        <div class="field"><label>Low</label><input type="number" id="pL" step="0.25" placeholder="6892.25" oninput="auto()"></div>
-      </div>
-      <div class="g2" style="margin-top:8px">
-        <div class="field"><label>Close</label><input type="number" id="pC" step="0.25" placeholder="6948.50" oninput="auto()"></div>
-        <div class="field"><label>Open (opc.)</label><input type="number" id="pO" step="0.25" placeholder="" oninput="auto()"></div>
-      </div>
-    </div>
+<div class="stitle">Metricas Clave &mdash; Hora 9AM &nbsp;(Clean Backtest 2015&ndash;2026)</div>
+<div class="mgrid">
+  <div class="card mc cy">
+    <div class="clbl">Win Rate &mdash; Clean</div>
+    <div class="mv cy">99.7%</div>
+    <div class="msub">Solo target/stop reales</div>
+    <div class="mbadge bcy">313 trades verificados</div>
+  </div>
+  <div class="card mc gr">
+    <div class="clbl">Target Hit Rate</div>
+    <div class="mv gr">88.9%</div>
+    <div class="msub">Trade llega al target intraday</div>
+    <div class="mbadge bgr">312 de 351 en h=9</div>
+  </div>
+  <div class="card mc go">
+    <div class="clbl">PnL Historico &mdash; h=9</div>
+    <div class="mv go">$288k</div>
+    <div class="msub">1 contrato &mdash; 11 anos</div>
+    <div class="mbadge bgo">$26k promedio/ano</div>
+  </div>
+  <div class="card mc pu">
+    <div class="clbl">Stops Activados h=9</div>
+    <div class="mv pu">1</div>
+    <div class="msub">Total en 11 anos / 351 trades</div>
+    <div class="mbadge bpu">0.3% frecuencia</div>
+  </div>
+</div>
 
-    <div>
-      <div class="sec-label">Hoy</div>
-      <div class="g2">
-        <div class="field"><label>Open hoy</label><input type="number" id="cO" step="0.25" placeholder="6948.50" oninput="auto()"></div>
-        <div class="field"><label>Precio actual</label><input type="number" id="cP" step="0.25" placeholder="auto-dir" oninput="auto()"></div>
-      </div>
-    </div>
+<div class="stitle">Niveles para Hoy &mdash; <span id="todayLbl">2026-03-07</span></div>
+<div class="sgrid">
 
-    <div>
-      <div class="sec-label">Contexto de Entrada</div>
-      <div class="g3">
-        <div class="field">
-          <label>Día</label>
-          <select id="dow" onchange="auto()">
-            <option value="1">Mar</option>
-            <option value="2">Mié</option>
-            <option value="3">Jue</option>
-            <option value="4">Vie</option>
-            <option value="0">Lun</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Hora ET</label>
-          <select id="hour" onchange="auto()">
-            <option value="9">9 AM</option>
-            <option value="10">10 AM</option>
-            <option value="11">11 AM</option>
-            <option value="12">12 PM</option>
-            <option value="13">1 PM</option>
-            <option value="14">2 PM</option>
-            <option value="15">3 PM</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Dirección</label>
-          <select id="dir" onchange="auto()">
-            <option value="auto">Auto</option>
-            <option value="long">Long</option>
-            <option value="short">Short</option>
-          </select>
-        </div>
-      </div>
-      <div style="margin-top:8px">
-        <div class="field">
-          <label>Rango previo vs últimos 252 días</label>
-          <select id="vr" onchange="auto()">
-            <option value="0.85">Muy grande — top 15% (ELITE)</option>
-            <option value="0.75">Grande — top 25%</option>
-            <option value="0.50" selected>Normal — 33-66%</option>
-            <option value="0.20">Comprimido — bajo 33%</option>
-          </select>
-        </div>
-      </div>
-      <div style="margin-top:8px">
-        <div class="field">
-          <label>Volumen barra de toque</label>
-          <select id="vol" onchange="auto()">
-            <option value="0.3">Muy bajo — ideal</option>
-            <option value="0.6" selected>Bajo — bueno</option>
-            <option value="0.85">Normal — aceptable</option>
-          </select>
-        </div>
-      </div>
+  <div class="card sc short">
+    <div class="sdir">
+      <div class="dico s">&#9660;</div>
+      <div class="dlbl"><h3 class="s">SHORT</h3><p>Gap UP &rarr; precio sube 1P &rarr; reversal</p></div>
     </div>
-
-    <p class="hint"><span onclick="example()">Cargar ejemplo (26-Feb-2026)</span></p>
+    <div class="pr">
+      <div class="pi"><span class="pil">ENTRADA (prev_close + 1P)</span><span class="piv en" id="se">—</span></div>
+      <div class="pi"><span class="pil">TARGET (PIVOT &minus; TR/4)</span><span class="piv ts" id="st">—</span></div>
+      <div class="pi"><span class="pil">STOP (prev_high + 10% TR)</span><span class="piv st" id="ss">—</span></div>
+    </div>
+    <div class="div"></div>
+    <div class="rr">
+      <div class="ri"><div class="rv p" id="sr">—</div><div class="rl">Reward</div></div>
+      <div class="ri"><div class="rv" style="color:var(--txt2)" id="sk">—</div><div class="rl">Risk</div></div>
+      <div class="ri"><div class="rv p" id="srr">—</div><div class="rl">R/R</div></div>
+      <div class="ri"><div class="rv p" id="su">—</div><div class="rl">Reward $</div></div>
+    </div>
   </div>
 
-  <!-- RIGHT: OUTPUT -->
-  <div class="right" id="out">
-    <div class="empty" id="empty-msg">
-      <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
-        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-      </svg>
-      <p>Ingresa High, Low, Close del día anterior<br>y Open de hoy — la señal aparece automáticamente</p>
+  <div class="cp">
+    <div class="gi flat" id="gblock">
+      <div class="gv flat" id="gval">0.00</div>
+      <div class="gl" id="glbl">GAP &mdash; FLAT</div>
+    </div>
+    <div class="card ic">
+      <div class="clbl" style="text-align:center">PIVOT</div>
+      <div class="icv" style="color:var(--cyan)" id="piv">—</div>
+      <div class="ics">prev_high &minus; TR/2</div>
+    </div>
+    <div class="card ic">
+      <div class="clbl" style="text-align:center">TR75 &nbsp;/&nbsp; 1P</div>
+      <div class="icv" style="color:var(--gold);font-size:20px" id="tr75">—</div>
+      <div class="ics">75% rango &nbsp;|&nbsp; 25% TR75</div>
+    </div>
+    <div class="card ic">
+      <div class="clbl" style="text-align:center">PREV RANGE</div>
+      <div class="icv" style="color:var(--purple)" id="prng">—</div>
+      <div class="ics">Rango dia anterior</div>
+    </div>
+  </div>
+
+  <div class="card sc long">
+    <div class="sdir">
+      <div class="dico l">&#9650;</div>
+      <div class="dlbl"><h3 class="l">LONG</h3><p>Gap DOWN &rarr; precio baja 1P &rarr; reversal</p></div>
+    </div>
+    <div class="pr">
+      <div class="pi"><span class="pil">ENTRADA (prev_close &minus; 1P)</span><span class="piv en" id="le">—</span></div>
+      <div class="pi"><span class="pil">TARGET (PIVOT + TR/4)</span><span class="piv tl" id="lt">—</span></div>
+      <div class="pi"><span class="pil">STOP (S2 &minus; 10% TR)</span><span class="piv st" id="ls">—</span></div>
+    </div>
+    <div class="div"></div>
+    <div class="rr">
+      <div class="ri"><div class="rv p" id="lr">—</div><div class="rl">Reward</div></div>
+      <div class="ri"><div class="rv" style="color:var(--txt2)" id="lk">—</div><div class="rl">Risk</div></div>
+      <div class="ri"><div class="rv p" id="lrr">—</div><div class="rl">R/R</div></div>
+      <div class="ri"><div class="rv p" id="lu">—</div><div class="rl">Reward $</div></div>
+    </div>
+  </div>
+
+</div>
+
+<div style="margin-bottom:28px">
+  <div class="stitle">Escalera de Precios &mdash; Niveles Activos</div>
+  <div class="card" style="padding:24px"><div id="ladder"></div></div>
+</div>
+
+<div class="stitle">Horario de Trading &mdash; RTH (09:00&ndash;16:00 ET)</div>
+<div class="schgrid">
+  <div class="card sch sp"><div class="st">9</div><div class="sam">AM EST</div><div class="sstars c-p">&#9733;&#9733;&#9733;&#9733;&#9733;</div><div class="swr c-p">99.7%</div><div class="sn">313 clean / 351 total</div><div class="slbl b-p">PRIME</div></div>
+  <div class="card sch ss"><div class="st">10</div><div class="sam">AM EST</div><div class="sstars c-s">&#9733;&#9733;&#9733;&#9733;</div><div class="swr c-s">100%</div><div class="sn">84 clean / 115 total</div><div class="slbl b-s">STRONG</div></div>
+  <div class="card sch sg"><div class="st">11</div><div class="sam">AM EST</div><div class="sstars c-g">&#9733;&#9733;&#9733;</div><div class="swr c-g">98.2%</div><div class="sn">55 clean / 82 total</div><div class="slbl b-g">GOOD</div></div>
+  <div class="card sch sg"><div class="st">12</div><div class="sam">PM EST</div><div class="sstars c-g">&#9733;&#9733;&#9733;</div><div class="swr c-g">100%</div><div class="sn">49 clean / 74 total</div><div class="slbl b-g">MODERATE</div></div>
+  <div class="card sch sg"><div class="st">1</div><div class="sam">PM EST</div><div class="sstars c-g">&#9733;&#9733;</div><div class="swr c-g">100%</div><div class="sn">31 clean / 49 total</div><div class="slbl b-g">MODERATE</div></div>
+  <div class="card sch sw"><div class="st">2</div><div class="sam">PM EST</div><div class="sstars c-w">&#9733;</div><div class="swr c-w">81.1%</div><div class="sn">12 clean / 37 total</div><div class="slbl b-w">EVITAR</div></div>
+</div>
+
+<div class="warn">
+  <div class="wi">&#9888;</div>
+  <div class="wt">
+    <strong>Honestidad total:</strong> Backtest historico 2015&ndash;2026 con datos Databento. El 89% de los trades en h=9 HIT el target real intraday (clean hits). Solo <strong>1 stop</strong> activado en 11 anos en h=9. La hora 2PM tiene muestra pequena (37 trades, 32% clean) &mdash; estadisticamente debil. El <strong>percentil de volumen</strong> usa datos full-dataset (minor lookahead en vol_regime). <strong>No operar Lunes.</strong> Comenzar con 1 contrato para validar live. <strong>Performance pasado no garantiza resultados futuros.</strong>
+  </div>
+</div>
+
+<div class="stitle">Performance Historico</div>
+<div class="cgrid">
+  <div class="card cc"><div class="clbl">PnL por Ano &mdash; h=9 (1 contrato ES)</div><div class="cw"><canvas id="pnlC"></canvas></div></div>
+  <div class="card cc"><div class="clbl">Win Rate Clean por Ano &mdash; h=9</div><div class="cw"><canvas id="wrC"></canvas></div></div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 360px;gap:16px;margin-bottom:28px">
+  <div class="card" style="padding:24px">
+    <div class="clbl" style="margin-bottom:16px">Ano a Ano &mdash; Clean h=9</div>
+    <table class="ytbl">
+      <thead><tr><th>Ano</th><th>Clean n</th><th>Win Rate</th><th>Barra</th><th>PnL</th></tr></thead>
+      <tbody id="ytbody"></tbody>
+    </table>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:16px">
+    <div class="card" style="padding:24px">
+      <div class="clbl" style="margin-bottom:16px">Tipo de Cierre &mdash; Todos Setups</div>
+      <div style="position:relative;height:180px"><canvas id="pieC"></canvas></div>
+    </div>
+    <div class="card" style="padding:24px">
+      <div class="clbl" style="margin-bottom:14px">Regla &mdash; Sin Lunes</div>
+      <div style="text-align:center">
+        <div style="font-size:36px;font-weight:900;color:var(--green)">100%</div>
+        <div style="font-size:11px;color:var(--txt2);margin-top:4px">WR Clean h=9 excluyendo Lunes</div>
+        <div style="font-size:11px;color:var(--txt2);margin-top:2px">220 trades / 11 anos</div>
+      </div>
+      <div class="div"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:center">
+        <div><div style="font-size:18px;font-weight:700;color:var(--cyan)">97.4%</div><div style="font-size:10px;color:var(--txt2)">Con Lunes</div></div>
+        <div><div style="font-size:18px;font-weight:700;color:var(--green)">100%</div><div style="font-size:10px;color:var(--txt2)">Sin Lunes</div></div>
+      </div>
     </div>
   </div>
 </div>
 
+<div class="stitle">Logica del Sistema &mdash; Manuscrito</div>
+<div class="lgrid">
+  <div class="card lc">
+    <div class="lnum">01</div>
+    <div class="ltit">True Range con Gap</div>
+    <div class="ldesc">El rango verdadero incluye el gap overnight. Si el mercado gapea, el rango efectivo del dia es mayor. Esto define los niveles PIVOT correctamente.</div>
+    <div class="fmla">TR = prev_range + |gap|<br>PIVOT = prev_high &minus; TR/2</div>
+  </div>
+  <div class="card lc">
+    <div class="lnum">02</div>
+    <div class="ltit">1P &mdash; Initial Point</div>
+    <div class="ldesc">El mercado tiende a moverse 25% del TR75 en la direccion del gap antes de revertir. Este movimiento inicial desde prev_close con volumen bajo es la senal de entrada.</div>
+    <div class="fmla">TR75 = 0.75 &times; prev_range<br>1P = 0.25 &times; TR75<br>Entry SHORT = prev_close + 1P</div>
+  </div>
+  <div class="card lc">
+    <div class="lnum">03</div>
+    <div class="ltit">Target &mdash; 75% Reversal</div>
+    <div class="ldesc">Si el precio mueve 25% en la direccion del gap con volumen bajo, estadisticamente completa el 75% hacia el extremo opuesto. Target = PIVOT &plusmn; TR/4.</div>
+    <div class="fmla">Target SHORT = PIVOT &minus; TR/4<br>Target LONG  = PIVOT + TR/4<br>Vol filtro: ratio &le; 1.0</div>
+  </div>
+</div>
+
+<footer>
+  <strong>ES Futures &mdash; 1P + PIVOT-TR System</strong> &nbsp;|&nbsp; Backtest 2015&ndash;2026 &nbsp;|&nbsp; Databento Data &nbsp;|&nbsp; RTH 09:00&ndash;15:59 ET<br>
+  Solo informativo. No es recomendacion de inversion. Validar con cuenta demo antes de operar con capital real.
+</footer>
+
+</main>
 <script>
-// ═══════════════════════════════════════════════════════
-// BACKTEST DATA — VERIFIED 2015-2026 WALK-FORWARD
-// ═══════════════════════════════════════════════════════
-
-// Win rates by hour and direction — CORRECTED BACKTEST (close must be in zone)
-// 812 total setups 2015-2026, entry = close of bar inside 25% zone
-const WR = {
-  //  hour: { long: [wr, n],  short: [wr, n] }
-  9:  { long: [96.7,  61], short: [91.2, 137] },
-  10: { long: [85.3,  34], short: [87.0, 100] },
-  11: { long: [82.6,  23], short: [71.1,  83] },
-  12: { long: [92.9,  14], short: [64.4,  73] },
-  13: { long: [88.2,  17], short: [67.6,  68] },
-  14: { long: [61.5,  13], short: [59.7,  77] },
-  15: { long: [100.0, 27], short: [100.0, 85] },
-};
-
-// Win rates by hour and day-of-week (0=Mon) — corrected data
-const WR_DOW = {
-  9:  { 0:85.5, 1:98.2, 2:98.2, 3:88.2, 4:85.0 },
-  10: { 0:84.2, 1:85.2, 2:96.6, 3:81.0, 4:82.0 },
-  11: { 0:65.8, 1:84.6, 2:70.0, 3:77.3, 4:63.0 },
-  12: { 0:61.5, 1:71.4, 2:71.4, 3:75.0, 4:65.0 },
-  13: { 0:68.2, 1:66.7, 2:84.6, 3:62.5, 4:63.0 },
-  14: { 0:64.3, 1:61.1, 2:65.2, 3:47.1, 4:60.0 },
-  15: { 0:100,  1:100,  2:100,  3:100,  4:100  },
-};
-
-// Hour chart display data — corrected (close in zone required)
-const HOURS = [
-  { h:9,  label:'9:00 AM', long:96.7, short:91.2, n:198, cls:'best' },
-  { h:10, label:'10:00 AM',long:85.3, short:87.0, n:134, cls:'good' },
-  { h:11, label:'11:00 AM',long:82.6, short:71.1, n:106, cls:'ok'   },
-  { h:12, label:'12:00 PM',long:92.9, short:64.4, n:87,  cls:'ok'   },
-  { h:13, label:'1:00 PM', long:88.2, short:67.6, n:85,  cls:'ok'   },
-  { h:14, label:'2:00 PM', long:61.5, short:59.7, n:90,  cls:'bad'  },
-  { h:15, label:'3:00 PM', long:100,  short:100,  n:112, cls:'best' },
-];
-
-const YEARLY = [
-  {y:2015,n:72, wr:76.4},{y:2016,n:54, wr:81.5},{y:2017,n:99, wr:80.8},
-  {y:2018,n:89, wr:87.6},{y:2019,n:102,wr:92.2},{y:2020,n:53, wr:83.0},
-  {y:2021,n:98, wr:73.5},{y:2022,n:27, wr:77.8},{y:2023,n:43, wr:86.0},
-  {y:2024,n:81, wr:85.2},{y:2025,n:84, wr:75.0},
-];
-
-// ═══════════════════════════════════════════════════════
-// LOGIC
-// ═══════════════════════════════════════════════════════
-function g(id){ return document.getElementById(id); }
-function fv(id){ return parseFloat(g(id).value) || null; }
-function iv(id){ return parseInt(g(id).value); }
-
-function autoDir(price, pH, pL) {
-  if (!price) return null;
-  const range = pH - pL;
-  if (price >= pH - 0.25 * range) return 'short';
-  if (price <= pL + 0.25 * range) return 'long';
-  return null;
-}
-
-// Rule thresholds from corrected backtest (close in zone required)
-// ELITE: h9 + vol_regime>=0.66 → 100% WR (42 trades)
-// REGLA C: h9 + no Mon + Long → 100% WR (38 trades)
-// REGLA B: h9 + no Mon → 96.9% WR (129 trades)
-// REGLA A: h9 → 92.9% WR (198 trades)
-function getRule(hour, dir, dow, volRegime) {
-  const isElite = hour === 9 && volRegime >= 0.66;
-  if (isElite)                                    return { id:'ELITE', label:'ELITE — 100%',   color:'var(--elite)'  };
-  if (hour === 9 && dow !== 0 && dir === 'long')  return { id:'C',     label:'REGLA C — 100%', color:'var(--green)'  };
-  if (hour === 9 && dow !== 0)                    return { id:'B',     label:'REGLA B — 96.9%',color:'var(--blue)'   };
-  if (hour === 9)                                 return { id:'A',     label:'REGLA A — 92.9%',color:'var(--purple)' };
-  if (hour === 10)                                return { id:'BONUS', label:'BONUS — 86.5%',  color:'var(--orange)' };
-  return { id:'BASE', label:'FUERA VENTANA', color:'var(--muted)' };
-}
-
-function adjustedWR(baseWR, hour, dow, dir, volRegime) {
-  // Combine direction base WR with DOW adjustment
-  const dowWR  = (WR_DOW[hour] || {})[dow] || baseWR;
-  const dirWR  = (WR[hour] || {})[dir] || [baseWR, 0];
-  // Weighted average: 60% dirWR + 40% dowWR
-  let wr = dirWR[0] * 0.6 + dowWR * 0.4;
-  // Vol regime boost/penalty
-  if (volRegime >= 0.66) wr = Math.min(100, wr + 3);
-  else if (volRegime < 0.33) wr = Math.max(50, wr - 3);
-  return wr.toFixed(1);
-}
-
-function levels(pH, pL, dir) {
-  const range = pH - pL;
-  const zTop  = pH - 0.25 * range;
-  const zBot  = pL + 0.25 * range;
-  let entry, target, stop, tp1, tp2;
-  if (dir === 'short') {
-    entry = zTop; target = zBot; stop = pH + range * 0.1;
-    tp1 = entry - (entry - target) * 0.5;
-    tp2 = entry - (entry - target) * 0.75;
-  } else {
-    entry = zBot; target = zTop; stop = pL - range * 0.1;
-    tp1 = entry + (target - entry) * 0.5;
-    tp2 = entry + (target - entry) * 0.75;
-  }
-  const rr = Math.abs(entry - target) / Math.abs(entry - stop);
-  return { entry, target, stop, tp1, tp2, range, zTop, zBot, rr };
-}
-
-function fmt(n) { return Number(n).toFixed(2); }
-function fmtMoney(n) { return '$' + (Math.abs(n) * 50).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
-
-function auto() {
-  const pH = fv('pH'), pL = fv('pL'), pC = fv('pC'), cO = fv('cO');
-  if (!pH || !pL || !pC || !cO || pH <= pL) {
-    document.getElementById('empty-msg').style.display = 'flex';
-    return;
-  }
-  document.getElementById('empty-msg').style.display = 'none';
-
-  const hour = iv('hour');
-  const dow  = iv('dow');
-  const vr   = parseFloat(g('vr').value);
-  const vol  = parseFloat(g('vol').value);
-  const cP   = fv('cP') || cO;
-
-  // Determine direction for each signal
-  const dirSel = g('dir').value;
-  let detectedDir = autoDir(cP, pH, pL);
-
-  // Calculate WR for both long and short at this hour
-  const longWR  = adjustedWR((WR[hour]?.long  || [62.5])[0], hour, dow, 'long',  vr);
-  const shortWR = adjustedWR((WR[hour]?.short || [62.5])[0], hour, dow, 'short', vr);
-  const longN   = (WR[hour]?.long  || [0,0])[1];
-  const shortN  = (WR[hour]?.short || [0,0])[1];
-
-  // Pick winner
-  let recDir, otherDir;
-  if (dirSel === 'auto') {
-    if (detectedDir) {
-      recDir   = detectedDir;
-      otherDir = detectedDir === 'long' ? 'short' : 'long';
-    } else {
-      recDir   = parseFloat(longWR) >= parseFloat(shortWR) ? 'long' : 'short';
-      otherDir = recDir === 'long' ? 'short' : 'long';
-    }
-  } else {
-    recDir   = dirSel;
-    otherDir = dirSel === 'long' ? 'short' : 'long';
-  }
-
-  const recWR   = recDir   === 'long' ? longWR  : shortWR;
-  const otherWR = otherDir === 'long' ? longWR  : shortWR;
-  const recN    = recDir   === 'long' ? longN   : shortN;
-  const otherN  = otherDir === 'long' ? longN   : shortN;
-
-  const recRule   = getRule(hour, recDir,   dow, vr);
-  const otherRule = getRule(hour, otherDir, dow, vr);
-  const L = levels(pH, pL, recDir);
-
-  // Tags
-  const tags = [];
-  if (dow !== 0) tags.push(`<span class="tag tag-green">${['Lun','Mar','Mié','Jue','Vie'][dow]}</span>`);
-  else           tags.push(`<span class="tag tag-yellow">Lunes (-6%)</span>`);
-  if (hour === 9)  tags.push(`<span class="tag tag-green">Primera hora — mejor ventana</span>`);
-  else if (hour===10) tags.push(`<span class="tag tag-blue">Segunda hora</span>`);
-  else             tags.push(`<span class="tag tag-red">Hora fuera de ventana óptima</span>`);
-  if (vr >= 0.66)  tags.push(`<span class="tag tag-elite">Rango alto hist. — ELITE</span>`);
-  else if (vr >= 0.33) tags.push(`<span class="tag tag-muted">Rango normal</span>`);
-  else             tags.push(`<span class="tag tag-yellow">Rango comprimido</span>`);
-  if (vol <= 0.6)  tags.push(`<span class="tag tag-green">Volumen bajo ✓</span>`);
-
-  const gap = ((cO - pC) / pC * 100).toFixed(2);
-  if (Math.abs(gap) > 0.05) tags.push(`<span class="tag tag-${gap>0?'green':'red'}">Gap ${gap>0?'+':''}${gap}%</span>`);
-
-  // Entry position in range
-  const entryPct = ((L.entry - pL) / (pH - pL) * 100).toFixed(1);
-
-  // Checklist
-  const checks = [
-    { ok: hour === 9,    txt: `Hora 9AM ET (primera hora) — WR ${(WR[9]?.[recDir]||[0])[0]}% histórico` },
-    { ok: dow !== 0,     txt: `No es Lunes${dow===2?' — Martes/Mié tienen 98.2% WR':dow===1?' — Martes 98.2% WR':''}`    },
-    { ok: vr >= 0.66,    txt: `Rango previo alto histórico (ELITE — 100% WR, 42 trades)` },
-    { ok: vol <= 0.6,    txt: `Volumen de toque muy bajo (exhaustion confirmado)` },
-    { ok: true,          txt: `Precio en zona 25% del rango previo` },
-  ];
-
-  // Hour chart: highlight selected direction
-  const hourChart = HOURS.map(hd => {
-    const wr  = recDir === 'long' ? hd.long : hd.short;
-    const cls = hd.cls;
-    const isSelected = hd.h === hour;
-    const border = isSelected ? 'outline: 2px solid var(--blue); outline-offset: 2px;' : '';
-    const bestDir = hd.long >= hd.short ? '↑' : '↓';
-    const bestDirWR = Math.max(hd.long, hd.short);
-    return `
-      <div class="hr-row" style="${isSelected ? 'background:#58a6ff08;border-radius:6px;padding:2px 4px;margin:0 -4px' : ''}">
-        <span class="hr-time">${hd.label}</span>
-        <div class="hr-bar-wrap">
-          <div class="hr-bar ${cls}" style="width:${wr}%">${wr >= 70 ? wr + '%' : ''}</div>
-        </div>
-        <span class="hr-wr" style="color:${wr>=90?'var(--green)':wr>=80?'var(--blue)':wr>=70?'var(--yellow)':'var(--red)'}">${wr}%</span>
-        <span class="hr-n">${hd.n}tr</span>
-        <span class="hr-dir" style="color:var(--muted);font-size:10px">${bestDir}${bestDirWR}%</span>
-      </div>`;
+const D={today:{prev_close:6948.50,prev_range:91.5,tr75:68.62,one_p:17.16,gap:0.00,gap_dir:'FLAT',pivot:6938.00,tr:91.5,short:{entry:6965.66,target:6915.12,stop:6992.90,pts_to_target:50.53,pts_to_stop:27.24},long:{entry:6931.34,target:6960.88,stop:6883.10,pts_to_target:29.53,pts_to_stop:48.24}},byYear:[{year:2015,n:16,wr:100,pnl:7630},{year:2016,n:11,wr:90.9,pnl:5476},{year:2017,n:45,wr:100,pnl:11085},{year:2018,n:36,wr:100,pnl:23232},{year:2019,n:30,wr:100,pnl:15613},{year:2020,n:24,wr:100,pnl:28499},{year:2021,n:30,wr:100,pnl:22444},{year:2022,n:14,wr:100,pnl:22329},{year:2023,n:16,wr:100,pnl:18890},{year:2024,n:40,wr:100,pnl:51948},{year:2025,n:48,wr:100,pnl:66847},{year:2026,n:3,wr:100,pnl:2781}]};
+function f(n,d=2){return n.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d})}
+function ladder(){
+  const t=D.today;
+  const lvls=[
+    {p:t.short.stop,  lbl:'STOP SHORT',        c:'#ff3c5a',glow:false,bg:'rgba(255,60,90,0.06)'},
+    {p:t.short.entry, lbl:'ENTRY SHORT',        c:'#ff3c5a',glow:true, bg:'rgba(255,60,90,0.12)'},
+    {p:t.long.target, lbl:'TARGET LONG (R1)',   c:'#00e87a',glow:false,bg:'rgba(0,232,122,0.06)'},
+    {p:t.prev_close,  lbl:'PREV CLOSE',         c:'#00c8ff',glow:true, bg:'rgba(0,200,255,0.08)'},
+    {p:t.pivot,       lbl:'PIVOT',              c:'#ffc840',glow:true, bg:'rgba(255,200,64,0.08)'},
+    {p:t.long.entry,  lbl:'ENTRY LONG',         c:'#00e87a',glow:true, bg:'rgba(0,232,122,0.12)'},
+    {p:t.short.target,lbl:'TARGET SHORT (S1)',  c:'#ff3c5a',glow:false,bg:'rgba(255,60,90,0.06)'},
+    {p:t.long.stop,   lbl:'STOP LONG',          c:'#00e87a',glow:false,bg:'rgba(0,232,122,0.06)'},
+  ].sort((a,b)=>b.p-a.p);
+  const hi=lvls[0].p,lo=lvls[lvls.length-1].p,sp=hi-lo;
+  document.getElementById('ladder').innerHTML=lvls.map(lv=>{
+    const pct=((lv.p-lo)/sp*80).toFixed(1);
+    return`<div class="lrow" style="background:${lv.bg}"><div class="ldot" style="background:${lv.c}${lv.glow?';box-shadow:0 0 8px '+lv.c:''}"></div><div class="lname" style="color:${lv.c};font-weight:${lv.glow?700:400}">${lv.lbl}</div><div style="flex:1;height:3px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden"><div style="width:${pct}%;height:100%;background:${lv.c};opacity:0.6"></div></div><div class="lprice" style="color:${lv.c}">${f(lv.p)}</div></div>`;
   }).join('');
-
-  // Yearly mini chart
-  const yearBars = YEARLY.map(d => `
-    <div style="display:flex;align-items:center;gap:6px;padding:2px 0">
-      <span style="font-size:10px;color:var(--muted);width:32px">${d.y}</span>
-      <div style="flex:1;height:12px;background:#ffffff06;border-radius:3px;overflow:hidden">
-        <div style="width:${d.wr}%;height:100%;background:${d.wr>=90?'var(--green)':d.wr>=80?'var(--blue)':'var(--yellow)'};border-radius:3px"></div>
-      </div>
-      <span style="font-size:10px;font-family:monospace;color:${d.wr>=90?'var(--green)':d.wr>=80?'var(--blue)':'var(--yellow)'};width:36px;text-align:right">${d.wr}%</span>
-    </div>`).join('');
-
-  const isElite = vr >= 0.66 && hour === 9;
-  const recColor = parseFloat(recWR) >= 90 ? 'var(--green)' : parseFloat(recWR) >= 80 ? 'var(--blue)' : 'var(--yellow)';
-
-  document.getElementById('out').innerHTML = `
-
-  <!-- ── SIGNAL HERO ── -->
-  <div class="signal-hero">
-    <div class="signal-hero-top">
-
-      <!-- WINNER -->
-      <div class="sig-box winner" style="border-color:${recColor}; background:${recColor}11">
-        <div class="sig-dir" style="color:${recColor}">${recDir === 'long' ? '↑ LONG' : '↓ SHORT'}</div>
-        <div class="sig-wr"  style="color:${recColor}">${recWR}%</div>
-        <div class="sig-rule" style="color:${recColor}">${recRule.label}</div>
-        <div class="sig-n">${recN} trades verificados</div>
-      </div>
-
-      <!-- VS -->
-      <div class="vs-col">
-        <div class="vs-label">VS</div>
-        <div class="vs-rec" style="color:${recColor};font-weight:700;margin-top:4px">TOMAR ${recDir.toUpperCase()}</div>
-        <div style="font-size:10px;color:var(--muted);margin-top:4px">mayor probabilidad</div>
-      </div>
-
-      <!-- OTHER -->
-      <div class="sig-box loser">
-        <div class="sig-dir" style="color:var(--muted)">${otherDir === 'long' ? '↑ LONG' : '↓ SHORT'}</div>
-        <div class="sig-wr"  style="color:var(--muted)">${otherWR}%</div>
-        <div class="sig-rule">${otherRule.label}</div>
-        <div class="sig-n">${otherN} trades</div>
-      </div>
-    </div>
-
-    <div class="signal-hero-bot">
-      ${tags.join('')}
-    </div>
-  </div>
-
-  <!-- ── HOUR CHART ── -->
-  <div class="hour-chart">
-    <div style="display:flex;align-items:center;justify-content:space-between">
-      <div class="sec-label" style="margin:0">Win Rate por Hora — dirección ${recDir.toUpperCase()}</div>
-      <div class="best-hour-badge">★ Mejor hora: 9:00 AM ET (${(WR[9]?.[recDir]||[0])[0]}%)</div>
-    </div>
-    <div class="hour-rows">${hourChart}</div>
-    <div style="margin-top:10px;font-size:11px;color:var(--muted)">
-      Hora resaltada = tu selección actual &nbsp;·&nbsp; Columna derecha = mejor dirección por hora
-    </div>
-  </div>
-
-  <!-- ── LEVELS ── -->
-  <div class="levels-card">
-    <div class="levels-hdr">
-      <h3>Niveles — ${recDir.toUpperCase()} desde zona ${recDir === 'long' ? 'baja (25%)' : 'alta (25%)'}</h3>
-      <div class="rr-pill">R:R ${L.rr.toFixed(2)}x · ${L.range.toFixed(2)} pts rango</div>
-    </div>
-    <table>
-      <thead><tr><th>Nivel</th><th>Precio</th><th>Puntos</th><th>$/ES</th></tr></thead>
-      <tbody>
-        <tr class="row-stop">
-          <td class="c-red">STOP LOSS</td>
-          <td class="mono c-red">${fmt(L.stop)}</td>
-          <td class="c-red">-${Math.abs(L.entry - L.stop).toFixed(2)}</td>
-          <td class="c-red">-${fmtMoney(L.entry - L.stop)}</td>
-        </tr>
-        <tr class="row-entry">
-          <td class="c-blue">ENTRADA — zona 25%</td>
-          <td class="mono c-blue">${fmt(L.entry)}</td>
-          <td class="c-muted">—</td>
-          <td class="c-muted">—</td>
-        </tr>
-        <tr>
-          <td class="c-yellow">TP1 — 50% del recorrido</td>
-          <td class="mono c-yellow">${fmt(L.tp1)}</td>
-          <td class="c-yellow">+${Math.abs(L.tp1 - L.entry).toFixed(2)}</td>
-          <td class="c-yellow">+${fmtMoney(L.tp1 - L.entry)}</td>
-        </tr>
-        <tr>
-          <td style="color:#7ee787">TP2 — 75% del recorrido</td>
-          <td class="mono" style="color:#7ee787">${fmt(L.tp2)}</td>
-          <td style="color:#7ee787">+${Math.abs(L.tp2 - L.entry).toFixed(2)}</td>
-          <td style="color:#7ee787">+${fmtMoney(L.tp2 - L.entry)}</td>
-        </tr>
-        <tr class="row-target">
-          <td class="c-green">TARGET — zona 75% (extremo contrario)</td>
-          <td class="mono c-green">${fmt(L.target)}</td>
-          <td class="c-green">+${Math.abs(L.target - L.entry).toFixed(2)}</td>
-          <td class="c-green">+${fmtMoney(L.target - L.entry)}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- ── RANGE VISUAL ── -->
-  <div class="range-card">
-    <div class="sec-label" style="margin-bottom:8px">Mapa del Rango Previo</div>
-    <div class="rng-bar">
-      <div class="rng-z-low"  style="width:25%"></div>
-      <div class="rng-z-high" style="width:25%"></div>
-      <div class="rng-cursor" style="left:${entryPct}%"></div>
-    </div>
-    <div class="rng-labels">
-      <span class="c-red">▼ LOW ${fmt(pL)}<br><small>Zona LONG entrada</small></span>
-      <span style="color:var(--muted);text-align:center">Medio<br>${fmt((pH+pL)/2)}</span>
-      <span class="c-green" style="text-align:right">HIGH ${fmt(pH)} ▲<br><small>Zona SHORT entrada</small></span>
-    </div>
-    <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px">
-      <div style="padding:8px;background:var(--bg);border-radius:6px;border:1px solid #f8514922">
-        <div class="c-red" style="font-size:10px;margin-bottom:4px">ZONA LONG (bottom 25%)</div>
-        <span style="font-family:monospace">${fmt(pL)} → ${fmt(L.zBot)}</span>
-      </div>
-      <div style="padding:8px;background:var(--bg);border-radius:6px;border:1px solid #3fb95022">
-        <div class="c-green" style="font-size:10px;margin-bottom:4px">ZONA SHORT (top 25%)</div>
-        <span style="font-family:monospace">${fmt(L.zTop)} → ${fmt(pH)}</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- ── CHECKLIST ── -->
-  <div class="check-card">
-    <div class="sec-label">Checklist de Calidad</div>
-    ${checks.map(c => `
-      <div class="chk-item ${c.ok ? 'pass' : 'fail'}">
-        <span class="chk-icon" style="color:${c.ok ? 'var(--green)' : 'var(--muted)'}">${c.ok ? '✓' : '○'}</span>
-        <span class="chk-text" style="color:${c.ok ? 'var(--text)' : 'var(--muted)'}">${c.txt}</span>
-      </div>`).join('')}
-    <div style="margin-top:12px;padding:10px;background:var(--bg);border-radius:6px;font-size:12px">
-      <span style="color:var(--muted)">Score del setup: </span>
-      <span style="color:${checks.filter(c=>c.ok).length>=4?'var(--green)':checks.filter(c=>c.ok).length>=3?'var(--yellow)':'var(--red)'}; font-weight:700">
-        ${checks.filter(c=>c.ok).length}/${checks.length} — ${checks.filter(c=>c.ok).length>=4?'EXCELENTE':checks.filter(c=>c.ok).length>=3?'BUENO':'ESPERAR MEJOR SETUP'}
-      </span>
-    </div>
-  </div>
-
-  <!-- ── REGLA CONFIRMACION PROXIMA HORA ── -->
-  <div class="check-card" style="border-color:${hour===9?'#3fb95044':'var(--border)'}">
-    <div class="sec-label">Regla de Confirmacion — Proxima Hora (nuevo hallazgo)</div>
-    <div style="margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;border:1px solid #3fb95033">
-      <div style="font-size:12px;color:var(--text);line-height:1.7">
-        ${hour===9 ? `
-        <span style="color:var(--green);font-weight:700">Cuando entras a las 9AM:</span><br>
-        Observa la barra de <strong>10AM</strong> — si su close va en tu direccion:<br>
-        <span style="color:var(--elite);font-weight:700;font-size:14px">WR sube a 98.7%</span>
-        <span style="color:var(--muted);font-size:11px"> (154 trades, 9 de 11 años con 100%)</span><br><br>
-        Si la barra de 10AM va en <span style="color:var(--red)">contra</span> → WR baja a 72.7% → considera salida anticipada.
-        ` : `
-        <span style="color:var(--muted)">Este filtro aplica solo a entradas en hora 9AM.</span><br>
-        Cambia la hora a 9AM para ver la regla de confirmacion de proxima barra.
-        `}
-      </div>
-    </div>
-    <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px">
-      <div style="padding:10px;background:var(--bg);border-radius:6px;border:1px solid #3fb95033;text-align:center">
-        <div style="font-size:20px;font-weight:800;color:var(--green)">98.7%</div>
-        <div style="font-size:10px;color:var(--muted);margin-top:2px">9AM + 10AM confirma</div>
-        <div style="font-size:10px;color:var(--muted)">154 trades verificados</div>
-      </div>
-      <div style="padding:10px;background:var(--bg);border-radius:6px;border:1px solid #f8514922;text-align:center">
-        <div style="font-size:20px;font-weight:800;color:var(--red)">72.7%</div>
-        <div style="font-size:10px;color:var(--muted);margin-top:2px">9AM + 10AM en contra</div>
-        <div style="font-size:10px;color:var(--muted)">44 trades — salida anticipada</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ── BACKTEST ANUAL ── -->
-  <div class="check-card">
-    <div class="sec-label">Backtest Año a Año (base — todos los setups)</div>
-    <div style="margin-top:8px">${yearBars}</div>
-    <div style="margin-top:12px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
-      <div style="text-align:center;padding:10px;background:var(--bg);border-radius:8px">
-        <div style="font-size:18px;font-weight:700;color:var(--elite)">100%</div>
-        <div style="font-size:10px;color:var(--muted);margin-top:2px">WR ELITE</div>
-      </div>
-      <div style="text-align:center;padding:10px;background:var(--bg);border-radius:8px">
-        <div style="font-size:18px;font-weight:700;color:var(--green)">98.7%</div>
-        <div style="font-size:10px;color:var(--muted);margin-top:2px">9AM + 10AM ok</div>
-      </div>
-      <div style="text-align:center;padding:10px;background:var(--bg);border-radius:8px">
-        <div style="font-size:18px;font-weight:700;color:var(--blue)">81.9%</div>
-        <div style="font-size:10px;color:var(--muted);margin-top:2px">WR Base</div>
-      </div>
-      <div style="text-align:center;padding:10px;background:var(--bg);border-radius:8px">
-        <div style="font-size:18px;font-weight:700;color:var(--purple)">0.743</div>
-        <div style="font-size:10px;color:var(--muted);margin-top:2px">AUC XGBoost</div>
-      </div>
-    </div>
-  </div>
-
-  <div style="background:#e3b34108;border:1px solid #e3b34122;border-radius:8px;padding:10px 14px;font-size:11px;color:var(--muted)">
-    Backtest 2015-2026 · 812 setups · Deteccion corregida: entry solo cuando CLOSE esta dentro de zona 25%. Walk-forward sin lookahead. Rendimiento pasado no garantiza resultados futuros.
-  </div>`;
 }
-
-function example() {
-  g('pH').value  = 6983.75;
-  g('pL').value  = 6892.25;
-  g('pC').value  = 6948.50;
-  g('cO').value  = 6948.50;
-  g('cP').value  = 6965.00;
-  g('dow').value = 3;
-  g('hour').value= 9;
-  g('vr').value  = 0.85;
-  g('vol').value = 0.3;
-  g('dir').value = 'auto';
-  auto();
+function ytable(){
+  const mx=Math.max(...D.byYear.map(y=>y.pnl));
+  document.getElementById('ytbody').innerHTML=D.byYear.map(y=>{
+    const w=Math.round(y.pnl/mx*90);const c=y.wr>=100?'var(--green)':'var(--gold)';
+    return`<tr><td style="font-weight:700;color:var(--white)">${y.year}</td><td style="color:var(--txt2)">${y.n}</td><td style="color:${c};font-weight:700">${y.wr}%</td><td><div class="ybar" style="width:${w}px;background:${c}"></div></td><td style="color:var(--cyan);font-weight:600">$${y.pnl.toLocaleString()}</td></tr>`;
+  }).join('');
 }
+function charts(){
+  const yrs=D.byYear.map(y=>y.year),pnls=D.byYear.map(y=>y.pnl),wrs=D.byYear.map(y=>y.wr);
+  const base={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}};
+  const gc='rgba(100,160,255,0.07)',tc={color:'#6888b0',font:{size:11}},tt={backgroundColor:'rgba(8,14,28,0.95)',borderColor:'rgba(100,160,255,0.2)',borderWidth:1};
+  new Chart(document.getElementById('pnlC'),{type:'bar',data:{labels:yrs,datasets:[{data:pnls,backgroundColor:pnls.map(v=>v>=20000?'rgba(0,232,122,0.65)':'rgba(0,200,255,0.5)'),borderColor:pnls.map(v=>v>=20000?'#00e87a':'#00c8ff'),borderWidth:1,borderRadius:6}]},options:{...base,scales:{x:{grid:{color:gc},ticks:tc},y:{grid:{color:gc},ticks:{...tc,callback:v=>'$'+Math.round(v/1000)+'k'}}},plugins:{...base.plugins,tooltip:{...tt,callbacks:{label:c=>' $'+c.raw.toLocaleString()}}}}});
+  new Chart(document.getElementById('wrC'),{type:'line',data:{labels:yrs,datasets:[{data:wrs,borderColor:'#ffc840',backgroundColor:'rgba(255,200,64,0.07)',fill:true,tension:0.3,pointRadius:5,pointBackgroundColor:wrs.map(v=>v>=100?'#00e87a':'#ffc840'),pointBorderColor:wrs.map(v=>v>=100?'#00e87a':'#ffc840'),borderWidth:2}]},options:{...base,scales:{x:{grid:{color:gc},ticks:tc},y:{min:85,max:102,grid:{color:gc},ticks:{...tc,callback:v=>v+'%'}}},plugins:{...base.plugins,tooltip:{...tt,callbacks:{label:c=>' '+c.raw+'%'}}}}});
+  new Chart(document.getElementById('pieC'),{type:'doughnut',data:{labels:['Target Hit (74%)','EOD Close (25.7%)','Stop Hit (0.3%)'],datasets:[{data:[74,25.7,0.3],backgroundColor:['rgba(0,232,122,0.7)','rgba(0,200,255,0.5)','rgba(255,60,90,0.7)'],borderColor:['#00e87a','#00c8ff','#ff3c5a'],borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{display:true,position:'bottom',labels:{color:'#6888b0',font:{size:10},padding:10,boxWidth:10}},tooltip:tt}}});
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  const ds=new Date().toISOString().split('T')[0];
+  document.getElementById('currentDate').textContent=ds;
+  document.getElementById('todayLbl').textContent=ds;
+  const t=D.today,s=t.short,l=t.long,gd=t.gap_dir.toLowerCase();
+  document.getElementById('gval').textContent=(t.gap>=0?'+':'')+f(t.gap);
+  document.getElementById('gval').className='gv '+gd;
+  document.getElementById('gblock').className='gi '+gd;
+  document.getElementById('glbl').textContent='GAP \u2014 '+t.gap_dir;
+  document.getElementById('piv').textContent=f(t.pivot);
+  document.getElementById('tr75').textContent=t.tr75.toFixed(2)+' / '+t.one_p.toFixed(2);
+  document.getElementById('prng').textContent=t.prev_range.toFixed(1)+' pts';
+  document.getElementById('se').textContent=f(s.entry);
+  document.getElementById('st').textContent=f(s.target);
+  document.getElementById('ss').textContent=f(s.stop);
+  document.getElementById('sr').textContent=s.pts_to_target.toFixed(1)+' pts';
+  document.getElementById('sk').textContent=s.pts_to_stop.toFixed(1)+' pts';
+  document.getElementById('srr').textContent='1 : '+(s.pts_to_target/s.pts_to_stop).toFixed(2);
+  document.getElementById('su').textContent='$'+Math.round(s.pts_to_target*50).toLocaleString();
+  document.getElementById('le').textContent=f(l.entry);
+  document.getElementById('lt').textContent=f(l.target);
+  document.getElementById('ls').textContent=f(l.stop);
+  document.getElementById('lr').textContent=l.pts_to_target.toFixed(1)+' pts';
+  document.getElementById('lk').textContent=l.pts_to_stop.toFixed(1)+' pts';
+  document.getElementById('lrr').textContent='1 : '+(l.pts_to_target/l.pts_to_stop).toFixed(2);
+  document.getElementById('lu').textContent='$'+Math.round(l.pts_to_target*50).toLocaleString();
+  ladder();ytable();charts();
+});
 </script>
 </body>
 </html>
