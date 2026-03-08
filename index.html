@@ -14,24 +14,25 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;font-family:'SF Pro Text',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--txt);font-size:13px;line-height:1.5}
 .app{display:grid;grid-template-rows:auto 1fr auto;min-height:100vh}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:44px;background:var(--panel);border-bottom:1px solid var(--border);flex-shrink:0}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:44px;background:var(--panel);border-bottom:1px solid var(--border)}
 .tb-logo{font-size:13px;font-weight:700;color:var(--white)}
 .tb-right{display:flex;align-items:center;gap:16px;font-size:11px;color:var(--txt2)}
 .live{color:var(--green);display:flex;align-items:center;gap:5px}
 .live::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green);animation:blink 2s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
-.content{display:grid;grid-template-columns:280px 1fr;overflow:hidden}
+.content{display:grid;grid-template-columns:290px 1fr;overflow:hidden}
 .sidebar{background:var(--panel);border-right:1px solid var(--border);padding:14px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
 .main{padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:14px}
-.sbar{height:26px;background:var(--panel);border-top:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:20px;font-size:10px;color:var(--txt2)}
+.sbar{height:26px;background:var(--panel);border-top:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:16px;font-size:10px;color:var(--txt2)}
 /* inputs */
-.sec{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--txt2);padding-bottom:7px;border-bottom:1px solid var(--border);margin-bottom:2px}
+.sec{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--txt2);padding-bottom:6px;border-bottom:1px solid var(--border);margin-bottom:2px}
 .field{display:flex;flex-direction:column;gap:3px}
 .field label{font-size:9px;color:var(--txt2);letter-spacing:1px;text-transform:uppercase}
-.field input{background:var(--dim);border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:15px;font-weight:700;color:var(--white);font-variant-numeric:tabular-nums;width:100%;outline:none;transition:border-color 0.15s,box-shadow 0.15s}
+.field input{background:var(--dim);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:15px;font-weight:700;color:var(--white);font-variant-numeric:tabular-nums;width:100%;outline:none;transition:border-color 0.15s,box-shadow 0.15s}
 .field input:focus{border-color:var(--cyan);box-shadow:0 0 0 2px rgba(56,189,248,0.1)}
 .field input.err{border-color:var(--red)}
 .field input::placeholder{color:var(--txt2);font-weight:400;font-size:12px}
+.field .hint{font-size:9px;color:var(--txt2);margin-top:2px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .btn{width:100%;padding:9px;border:none;border-radius:7px;cursor:pointer;font-size:13px;font-weight:700;transition:opacity 0.15s,transform 0.1s}
 .btn:active{transform:scale(0.98)}
@@ -39,91 +40,99 @@ html,body{height:100%;font-family:'SF Pro Text',-apple-system,BlinkMacSystemFont
 .btn-primary:hover{opacity:0.9}
 .btn-ghost{background:transparent;border:1px solid var(--border);color:var(--txt2);font-size:11px;padding:7px}
 .btn-ghost:hover{border-color:var(--border2);color:var(--txt)}
-/* derived */
+/* derived boxes */
 .dg{display:grid;grid-template-columns:1fr 1fr;gap:5px}
-.dbox{background:var(--dim);border:1px solid var(--border);border-radius:7px;padding:8px 10px}
-.dbox-lbl{font-size:9px;color:var(--txt2);margin-bottom:3px;letter-spacing:0.3px}
-.dbox-val{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
+.dbox{background:var(--dim);border:1px solid var(--border);border-radius:7px;padding:7px 10px}
+.dl{font-size:9px;color:var(--txt2);margin-bottom:2px}
+.dv{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
 /* ref */
 .refrow{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--dim)}
 .refrow:last-child{border:none}
 .refl{font-size:11px;color:var(--txt2)}.refv{font-size:11px;font-weight:600;font-variant-numeric:tabular-nums}
+/* ─── FO ZONE BAR ─── */
+.fo-bar-wrap{background:var(--dim);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:4px}
+.fo-bar-title{font-size:9px;color:var(--txt2);margin-bottom:6px;letter-spacing:1px;text-transform:uppercase}
+.fo-track{position:relative;height:20px;background:var(--bg);border-radius:4px;overflow:hidden;margin-bottom:6px}
+.fo-seg{position:absolute;top:0;height:100%;opacity:0.25}
+.fo-seg-low {left:0;width:25%;background:var(--green)}
+.fo-seg-mid {left:25%;width:50%;background:var(--txt2)}
+.fo-seg-high{left:75%;width:25%;background:var(--red)}
+.fo-marker{position:absolute;top:2px;width:4px;height:16px;border-radius:2px;transform:translateX(-50%);transition:left 0.4s}
+.fo-labels{display:flex;justify-content:space-between;font-size:9px;color:var(--txt2)}
+.fo-zone-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:5px;font-size:11px;font-weight:700;margin-top:4px}
+.fz-high{background:rgba(248,113,113,0.12);color:var(--red);border:1px solid rgba(248,113,113,0.25)}
+.fz-low {background:rgba(52,211,153,0.12);color:var(--green);border:1px solid rgba(52,211,153,0.25)}
+.fz-mid {background:rgba(56,189,248,0.10);color:var(--cyan);border:1px solid rgba(56,189,248,0.2)}
 /* ─── PLAN ─── */
 .plan{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden}
-.plan-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--dim);border-bottom:1px solid var(--border)}
+.plan-hdr{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;background:var(--dim);border-bottom:1px solid var(--border)}
 .plan-title{font-size:13px;font-weight:700;color:var(--white)}
-.plan-date{font-size:11px;color:var(--txt2)}
-.plan-body{padding:16px;display:flex;flex-direction:column;gap:14px}
-/* gap strip */
-.gap-strip{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;border:1px solid var(--border)}
-.gap-strip.up  {background:rgba(248,113,113,0.05);border-color:rgba(248,113,113,0.2)}
-.gap-strip.down{background:rgba(52,211,153,0.05);border-color:rgba(52,211,153,0.2)}
-.gap-strip.flat{background:rgba(56,189,248,0.05);border-color:rgba(56,189,248,0.15)}
-.gap-label{font-size:11px;font-weight:700;padding:3px 10px;border-radius:5px}
-.gap-label.up  {background:rgba(248,113,113,0.15);color:var(--red)}
-.gap-label.down{background:rgba(52,211,153,0.15);color:var(--green)}
-.gap-label.flat{background:rgba(56,189,248,0.12);color:var(--cyan)}
-.gap-desc{font-size:12px;color:var(--txt)}
-.gap-pts{margin-left:auto;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
-/* setups inside plan */
-.plan-setups{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.psetup{border-radius:8px;border:1px solid var(--border);overflow:hidden}
-.psetup.short{border-color:rgba(248,113,113,0.25)}
-.psetup.long {border-color:rgba(52,211,153,0.25)}
-.psetup.inactive{opacity:0.35}
-.psetup-hdr{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;border-bottom:1px solid var(--border)}
-.psetup.short .psetup-hdr{background:rgba(248,113,113,0.06)}
-.psetup.long  .psetup-hdr{background:rgba(52,211,153,0.06)}
-.psetup-dir{font-size:12px;font-weight:700}
-.psetup.short .psetup-dir{color:var(--red)}
-.psetup.long  .psetup-dir{color:var(--green)}
-.psetup-status{font-size:9px;font-weight:700;letter-spacing:1px;padding:2px 7px;border-radius:4px}
-.status-active{background:rgba(52,211,153,0.12);color:var(--green);border:1px solid rgba(52,211,153,0.2)}
-.status-inactive{background:var(--dim);color:var(--txt2);border:1px solid var(--border)}
-.psetup-body{padding:10px 12px;display:flex;flex-direction:column;gap:6px}
-.prow{display:flex;justify-content:space-between;align-items:baseline}
-.prow-lbl{font-size:11px;color:var(--txt2)}
-.prow-val{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
-.prow-val.entry{color:var(--white)}
-.prow-val.tgt-s{color:var(--red)}.prow-val.tgt-l{color:var(--green)}.prow-val.stop{color:var(--txt2);font-size:13px}
-.prow-sub{font-size:10px;color:var(--txt2)}
-.pdivider{height:1px;background:var(--dim)}
-.chips{display:flex;gap:5px}
+.plan-meta{font-size:10px;color:var(--txt2)}
+.plan-body{padding:16px;display:flex;flex-direction:column;gap:12px}
+/* session bias */
+.bias-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.bias-card{border-radius:8px;border:1px solid var(--border);padding:10px 12px}
+.bias-card.active-short{border-color:rgba(248,113,113,0.35);background:rgba(248,113,113,0.05)}
+.bias-card.active-long {border-color:rgba(52,211,153,0.35);background:rgba(52,211,153,0.05)}
+.bias-card.inactive{opacity:0.3}
+.bias-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.bias-dir{font-size:12px;font-weight:700}
+.dir-s{color:var(--red)}.dir-l{color:var(--green)}
+.bias-stat{font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px}
+.bs-active{background:rgba(52,211,153,0.12);color:var(--green)}
+.bs-inactive{background:var(--dim);color:var(--txt2)}
+/* probability meter */
+.prob-wrap{margin-bottom:6px}
+.prob-label{display:flex;justify-content:space-between;font-size:10px;color:var(--txt2);margin-bottom:3px}
+.prob-track{height:5px;background:var(--dim);border-radius:3px;overflow:hidden}
+.prob-bar{height:100%;border-radius:3px;transition:width 0.5s}
+/* setup table */
+.ptable{width:100%;border-collapse:collapse}
+.ptable tr{border-bottom:1px solid var(--dim)}
+.ptable tr:last-child{border:none}
+.ptable td{padding:6px 0;vertical-align:middle}
+.ptl{font-size:11px;color:var(--txt2);width:50%}
+.ptv{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
+.ptv.en{color:var(--white)}.ptv.ts{color:var(--red)}.ptv.tl{color:var(--green)}.ptv.st{color:var(--txt2);font-size:13px}
+.ptsub{font-size:10px;color:var(--txt2);text-align:right}
+.divider{height:1px;background:var(--dim);margin:8px 0}
+.chips{display:flex;gap:5px;margin-top:6px}
 .chip{flex:1;background:var(--dim);border-radius:5px;padding:5px 6px;text-align:center}
-.chip-val{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
-.chip-lbl{font-size:9px;color:var(--txt2);margin-top:1px}
+.chip-v{font-size:12px;font-weight:700;font-variant-numeric:tabular-nums}
+.chip-l{font-size:9px;color:var(--txt2);margin-top:1px}
+/* extreme context box */
+.extreme-box{background:var(--dim);border:1px solid var(--border);border-radius:8px;padding:10px 14px}
+.extreme-title{font-size:10px;font-weight:600;color:var(--white);margin-bottom:8px}
+.ext-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.ext-item{text-align:center}
+.ext-val{font-size:18px;font-weight:800;font-variant-numeric:tabular-nums}
+.ext-lbl{font-size:9px;color:var(--txt2);margin-top:2px}
 /* ladder */
 .ladder-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px}
 .ladder-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.ladder-ttl{font-size:11px;font-weight:600;color:var(--white)}
-.ladder-hint{font-size:10px;color:var(--txt2)}
-.lrow{display:flex;align-items:center;gap:8px;padding:4px 6px;border-radius:5px;transition:background 0.1s}
+.ltitle{font-size:11px;font-weight:600;color:var(--white)}
+.lhint{font-size:10px;color:var(--txt2)}
+.lrow{display:flex;align-items:center;gap:8px;padding:4px 6px;border-radius:5px;transition:background 0.1s;cursor:default}
 .lrow:hover{background:var(--dim)}
 .ldot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 .lname{font-size:11px;flex:1}
 .lbar-wrap{width:80px;height:2px;background:var(--dim);border-radius:1px;overflow:hidden;flex-shrink:0}
 .lbar{height:100%;border-radius:1px}
 .ldelta{font-size:10px;min-width:52px;text-align:right;font-variant-numeric:tabular-nums}
-.lprice{font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;min-width:64px;text-align:right}
+.lprice{font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;min-width:62px;text-align:right}
 /* checklist */
-.checklist{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px}
+.cl{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px}
 .cl-title{font-size:11px;font-weight:600;color:var(--white);margin-bottom:10px}
-.cl-section{margin-bottom:10px}
-.cl-sec-label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--txt2);margin-bottom:6px}
-.cl-item{display:flex;align-items:flex-start;gap:8px;padding:5px 0;border-bottom:1px solid var(--dim)}
+.cl-sec{margin-bottom:8px}
+.cl-sl{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--txt2);margin-bottom:5px}
+.cl-item{display:flex;align-items:flex-start;gap:7px;padding:4px 0;border-bottom:1px solid var(--dim)}
 .cl-item:last-child{border:none}
-.cl-check{width:14px;height:14px;border:1px solid var(--border2);border-radius:3px;flex-shrink:0;margin-top:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent;transition:all 0.15s}
-.cl-check.done{background:var(--green);border-color:var(--green);color:#000}
-.cl-text{font-size:11px;color:var(--txt);line-height:1.5}
-.cl-text.highlight{color:var(--white);font-weight:600}
-.cl-price{color:var(--cyan);font-weight:700;font-variant-numeric:tabular-nums}
-/* empty */
-.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:10px;text-align:center}
-.empty p{font-size:12px;color:var(--txt2);line-height:1.7}
-/* copy btn */
-.btn-copy{background:var(--dim);border:1px solid var(--border);border-radius:5px;padding:4px 10px;font-size:10px;color:var(--txt2);cursor:pointer;transition:all 0.15s}
-.btn-copy:hover{border-color:var(--border2);color:var(--txt)}
-/* schedule small */
+.ck{width:14px;height:14px;border:1px solid var(--border2);border-radius:3px;flex-shrink:0;margin-top:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent;transition:all 0.15s}
+.ck.done{background:var(--green);border-color:var(--green);color:#000}
+.ct{font-size:11px;color:var(--txt);line-height:1.5}
+.ct.hi{color:var(--white);font-weight:600}
+.cp{color:var(--cyan);font-weight:700;font-variant-numeric:tabular-nums}
+/* schedule */
 .sch-row{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
 .sch{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:8px 5px;text-align:center;position:relative}
 .sch::after{content:'';position:absolute;bottom:0;left:25%;right:25%;height:2px;border-radius:1px}
@@ -134,20 +143,23 @@ html,body{height:100%;font-family:'SF Pro Text',-apple-system,BlinkMacSystemFont
 /* charts */
 .charts-row{display:grid;grid-template-columns:1fr 1fr 160px;gap:10px}
 .chart-card{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:12px}
-.chart-ttl{font-size:9px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;color:var(--txt2);margin-bottom:8px}
+.ctitle{font-size:9px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;color:var(--txt2);margin-bottom:8px}
 .cw{position:relative;height:140px}
 .warn{display:flex;gap:8px;padding:9px 12px;background:rgba(251,191,36,0.04);border:1px solid rgba(251,191,36,0.1);border-radius:7px;font-size:10px;color:var(--txt2);line-height:1.6}
 .warn strong{color:var(--gold)}
+.btn-copy{background:var(--dim);border:1px solid var(--border);border-radius:5px;padding:4px 10px;font-size:10px;color:var(--txt2);cursor:pointer;transition:all 0.15s}
+.btn-copy:hover{border-color:var(--border2);color:var(--txt)}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:50px 20px;gap:10px;text-align:center}
+.empty p{font-size:12px;color:var(--txt2);line-height:1.8}
 .hidden{display:none!important}
-@media(max-width:860px){.content{grid-template-columns:1fr}.sidebar{border-right:none;border-bottom:1px solid var(--border)}.plan-setups,.sch-row,.charts-row{grid-template-columns:1fr 1fr}.sch-row{grid-template-columns:repeat(3,1fr)}}
-@media print{.sidebar,.topbar,.sbar,.sch-row,.charts-row,.warn{display:none}.main{padding:0}.plan,.checklist,.ladder-card{border:1px solid #ccc;margin-bottom:12px}body{background:#fff;color:#000}}
+@media(max-width:860px){.content{grid-template-columns:1fr}.sidebar{border-right:none;border-bottom:1px solid var(--border)}.bias-row,.sch-row,.charts-row{grid-template-columns:1fr 1fr}.sch-row{grid-template-columns:repeat(3,1fr)}}
 </style>
 </head>
 <body>
 <div class="app">
 
 <div class="topbar">
-  <span class="tb-logo">ES &nbsp;·&nbsp; 1P + PIVOT-TR &nbsp;·&nbsp; Plan Diario</span>
+  <span class="tb-logo">ES &nbsp;&#183;&nbsp; 1P + PIVOT-TR &nbsp;&#183;&nbsp; Plan Diario</span>
   <div class="tb-right">
     <span class="live">Sistema Activo</span>
     <span id="topDate"></span>
@@ -156,213 +168,283 @@ html,body{height:100%;font-family:'SF Pro Text',-apple-system,BlinkMacSystemFont
 
 <div class="content">
 
-  <!-- ─── SIDEBAR ─── -->
-  <div class="sidebar">
-    <div class="sec">Dia Anterior</div>
-    <div class="grid2">
-      <div class="field"><label>HIGH</label><input type="number" id="iH" placeholder="0.00" step="0.25"></div>
-      <div class="field"><label>LOW</label><input type="number" id="iL" placeholder="0.00" step="0.25"></div>
+<!-- ─── SIDEBAR ─── -->
+<div class="sidebar">
+
+  <div class="sec">Sesion Anterior (RTH)</div>
+  <div class="grid2">
+    <div class="field"><label>HIGH</label><input type="number" id="iH" placeholder="0.00" step="0.25"></div>
+    <div class="field"><label>LOW</label><input type="number" id="iL" placeholder="0.00" step="0.25"></div>
+  </div>
+  <div class="field"><label>CLOSE</label><input type="number" id="iC" placeholder="0.00" step="0.25"></div>
+
+  <div class="sec" style="margin-top:2px">Futuros — Open 6PM ET</div>
+  <div class="field">
+    <label>OPEN FUTUROS (18:00 ET)</label>
+    <input type="number" id="iFO" placeholder="Open real 6PM" step="0.25">
+    <div class="hint" id="fo-prev">Precio cuando abren los futuros</div>
+  </div>
+
+  <!-- FO Zone bar (live) -->
+  <div class="fo-bar-wrap hidden" id="fo-bar-section">
+    <div class="fo-bar-title">Posicion Futures Open</div>
+    <div class="fo-track">
+      <div class="fo-seg fo-seg-low"></div>
+      <div class="fo-seg fo-seg-mid"></div>
+      <div class="fo-seg fo-seg-high"></div>
+      <div class="fo-marker" id="fo-marker" style="background:var(--cyan);left:50%"></div>
     </div>
-    <div class="field"><label>CLOSE</label><input type="number" id="iC" placeholder="0.00" step="0.25"></div>
+    <div class="fo-labels"><span>prev Low</span><span>25%</span><span>75%</span><span>prev High</span></div>
+    <div id="fo-zone-badge" class="fo-zone-badge fz-mid">MIDDLE</div>
+  </div>
 
-    <div class="sec" style="margin-top:4px">Apertura de Hoy</div>
-    <div class="field"><label>OPEN (opcional)</label><input type="number" id="iO" placeholder="Para calcular GAP" step="0.25"></div>
-    <div id="gap-prev" style="font-size:10px;color:var(--txt2);padding:2px 0">Gap: ingresa Open</div>
+  <div class="sec" style="margin-top:2px">Apertura RTH (optional)</div>
+  <div class="field">
+    <label>OPEN RTH (9AM, si disponible)</label>
+    <input type="number" id="iO" placeholder="Para calcular gap RTH" step="0.25">
+    <div class="hint" id="gap-prev">Gap RTH: ingresa para calcular</div>
+  </div>
 
-    <button class="btn btn-primary" onclick="calc()">GENERAR PLAN</button>
-    <button class="btn btn-ghost" onclick="reset()">Limpiar</button>
+  <button class="btn btn-primary" onclick="calc()">GENERAR PLAN</button>
+  <button class="btn btn-ghost" onclick="reset()">Limpiar</button>
 
-    <div id="dbox-section" class="hidden">
-      <div class="sec" style="margin-top:2px">Parametros</div>
-      <div class="dg">
-        <div class="dbox"><div class="dbox-lbl">RANGE</div><div class="dbox-val" style="color:var(--cyan)" id="d-rng">—</div></div>
-        <div class="dbox"><div class="dbox-lbl">GAP</div><div class="dbox-val" id="d-gap">—</div></div>
-        <div class="dbox"><div class="dbox-lbl">TR</div><div class="dbox-val" style="color:var(--gold)" id="d-tr">—</div></div>
-        <div class="dbox"><div class="dbox-lbl">PIVOT</div><div class="dbox-val" style="color:var(--purple)" id="d-piv">—</div></div>
-        <div class="dbox"><div class="dbox-lbl">TR75</div><div class="dbox-val" style="color:var(--green)" id="d-tr75">—</div></div>
-        <div class="dbox"><div class="dbox-lbl">1P</div><div class="dbox-val" style="color:var(--gold)" id="d-1p">—</div></div>
-      </div>
-    </div>
-
-    <div style="margin-top:auto;padding-top:12px">
-      <div class="sec">Referencia Historica h=9</div>
-      <div class="refrow"><span class="refl">WR Clean</span><span class="refv" style="color:var(--green)">99.7%</span></div>
-      <div class="refrow"><span class="refl">Target hit rate</span><span class="refv" style="color:var(--cyan)">88.9%</span></div>
-      <div class="refrow"><span class="refl">Stops / 11 anos</span><span class="refv" style="color:var(--red)">1</span></div>
-      <div class="refrow"><span class="refl">PnL 1 contrato</span><span class="refv" style="color:var(--gold)">$288k</span></div>
-      <div class="refrow"><span class="refl">No operar</span><span class="refv" style="color:var(--red)">Lunes · 2PM+</span></div>
+  <!-- Params -->
+  <div id="dbox-section" class="hidden">
+    <div class="sec" style="margin-top:2px">Parametros</div>
+    <div class="dg">
+      <div class="dbox"><div class="dl">RANGE</div><div class="dv" style="color:var(--cyan)" id="d-rng">—</div></div>
+      <div class="dbox"><div class="dl">GAP RTH</div><div class="dv" id="d-gap">—</div></div>
+      <div class="dbox"><div class="dl">TR</div><div class="dv" style="color:var(--gold)" id="d-tr">—</div></div>
+      <div class="dbox"><div class="dl">PIVOT</div><div class="dv" style="color:var(--purple)" id="d-piv">—</div></div>
+      <div class="dbox"><div class="dl">TR75</div><div class="dv" style="color:var(--green)" id="d-tr75">—</div></div>
+      <div class="dbox"><div class="dl">1P</div><div class="dv" style="color:var(--gold)" id="d-1p">—</div></div>
     </div>
   </div>
 
-  <!-- ─── MAIN ─── -->
-  <div class="main">
+  <!-- Ref -->
+  <div style="margin-top:auto;padding-top:10px">
+    <div class="sec">Referencia — h=9 Clean (11 anos)</div>
+    <div class="refrow"><span class="refl">WR con vol filtro</span><span class="refv" style="color:var(--green)">99.7%</span></div>
+    <div class="refrow"><span class="refl">Reach extremo (sin filtro)</span><span class="refv" style="color:var(--txt)">44-52%</span></div>
+    <div class="refrow"><span class="refl">Overnight reach</span><span class="refv" style="color:var(--cyan)">44-52%</span></div>
+    <div class="refrow"><span class="refl">Stops h=9 / 11 anos</span><span class="refv" style="color:var(--red)">1</span></div>
+    <div class="refrow"><span class="refl">No operar</span><span class="refv" style="color:var(--red)">Lunes · 2PM+</span></div>
+  </div>
+</div>
 
-    <!-- EMPTY -->
-    <div id="empty" class="empty">
-      <div style="font-size:36px;opacity:0.12">&#9678;</div>
-      <p>Ingresa High · Low · Close del dia anterior<br>y presiona <strong style="color:var(--white)">Generar Plan</strong><br><br>La noche anterior al trading obtenes<br>el plan completo con niveles exactos.</p>
-    </div>
+<!-- ─── MAIN ─── -->
+<div class="main">
 
-    <!-- PLAN COMPLETO -->
-    <div id="plan-wrap" class="hidden">
+  <div id="empty" class="empty">
+    <div style="font-size:36px;opacity:0.12">&#9678;</div>
+    <p>Ingresa High · Low · Close de la sesion anterior<br>+ Open Futuros (6PM ET) si ya abrieron<br>+ Open RTH (9AM) si ya lo sabes<br><br>Presiona <strong style="color:var(--white)">Generar Plan</strong></p>
+  </div>
 
-      <!-- ── PLAN DEL DIA ── -->
-      <div class="plan">
-        <div class="plan-hdr">
-          <div>
-            <div class="plan-title">PLAN DE TRADING &mdash; <span id="plan-date-hdr"></span></div>
-            <div class="plan-date" id="plan-subtitle"></div>
-          </div>
-          <button class="btn-copy" onclick="copyPlan()">Copiar plan</button>
+  <div id="plan-wrap" class="hidden">
+
+    <!-- ── PLAN ── -->
+    <div class="plan">
+      <div class="plan-hdr">
+        <div>
+          <div class="plan-title" id="plan-title">PLAN DE TRADING</div>
+          <div class="plan-meta" id="plan-meta"></div>
         </div>
-        <div class="plan-body">
+        <button class="btn-copy" onclick="copyPlan()">Copiar plan</button>
+      </div>
+      <div class="plan-body">
 
-          <!-- GAP -->
-          <div class="gap-strip flat" id="gap-strip">
-            <span class="gap-label flat" id="gap-lbl">FLAT</span>
-            <span class="gap-desc" id="gap-desc">Sin gap &mdash; ambas direcciones validas</span>
-            <span class="gap-pts" id="gap-pts"></span>
+        <!-- SESION BIAS (Futures Open) -->
+        <div id="fo-context" class="hidden">
+          <div style="font-size:10px;font-weight:600;color:var(--txt);margin-bottom:6px;letter-spacing:0.5px;text-transform:uppercase">Bias de Sesion — Futures Open</div>
+          <div class="bias-row" id="bias-row">
+            <!-- generado por JS -->
           </div>
-
-          <!-- SETUPS -->
-          <div class="plan-setups">
-            <!-- SHORT -->
-            <div class="psetup short" id="ps-short">
-              <div class="psetup-hdr">
-                <span class="psetup-dir">&#9660; SHORT</span>
-                <span class="psetup-status status-active" id="ps-short-status">ACTIVO</span>
+          <!-- Extreme stats -->
+          <div class="extreme-box" style="margin-top:8px">
+            <div class="extreme-title">Probabilidad Extremo -> Extremo (10 anos, 4036 eventos)</div>
+            <div class="ext-grid">
+              <div class="ext-item">
+                <div class="ext-val" id="ext-overnight" style="color:var(--cyan)">—</div>
+                <div class="ext-lbl">Overnight<br>reach zona</div>
               </div>
-              <div class="psetup-body">
-                <div class="prow"><span class="prow-lbl">Entrada</span><div><span class="prow-val entry" id="ss-en">—</span><div class="prow-sub">prev_close + 1P</div></div></div>
-                <div class="prow"><span class="prow-lbl">Target S1</span><div style="text-align:right"><span class="prow-val tgt-s" id="ss-tgt">—</span><div class="prow-sub" id="ss-tpts" style="color:var(--red)">—</div></div></div>
-                <div class="prow"><span class="prow-lbl">Stop</span><div style="text-align:right"><span class="prow-val stop" id="ss-stp">—</span><div class="prow-sub" id="ss-spts">—</div></div></div>
-                <div class="pdivider"></div>
-                <div class="chips">
-                  <div class="chip"><div class="chip-val" style="color:var(--green)" id="ss-rwd">—</div><div class="chip-lbl">RWD pts</div></div>
-                  <div class="chip"><div class="chip-val" style="color:var(--red)" id="ss-rsk">—</div><div class="chip-lbl">RISK pts</div></div>
-                  <div class="chip"><div class="chip-val" style="color:var(--gold)" id="ss-rr">—</div><div class="chip-lbl">R/R</div></div>
-                  <div class="chip"><div class="chip-val" style="color:var(--cyan)" id="ss-usd">—</div><div class="chip-lbl">USD</div></div>
-                </div>
+              <div class="ext-item">
+                <div class="ext-val" id="ext-h9" style="color:var(--green)">—</div>
+                <div class="ext-lbl">h=9 RTH<br>reach zona</div>
               </div>
-            </div>
-            <!-- LONG -->
-            <div class="psetup long" id="ps-long">
-              <div class="psetup-hdr">
-                <span class="psetup-dir">&#9650; LONG</span>
-                <span class="psetup-status status-active" id="ps-long-status">ACTIVO</span>
-              </div>
-              <div class="psetup-body">
-                <div class="prow"><span class="prow-lbl">Entrada</span><div><span class="prow-val entry" id="ll-en">—</span><div class="prow-sub">prev_close &minus; 1P</div></div></div>
-                <div class="prow"><span class="prow-lbl">Target R1</span><div style="text-align:right"><span class="prow-val tgt-l" id="ll-tgt">—</span><div class="prow-sub" id="ll-tpts" style="color:var(--green)">—</div></div></div>
-                <div class="prow"><span class="prow-lbl">Stop</span><div style="text-align:right"><span class="prow-val stop" id="ll-stp">—</span><div class="prow-sub" id="ll-spts">—</div></div></div>
-                <div class="pdivider"></div>
-                <div class="chips">
-                  <div class="chip"><div class="chip-val" style="color:var(--green)" id="ll-rwd">—</div><div class="chip-lbl">RWD pts</div></div>
-                  <div class="chip"><div class="chip-val" style="color:var(--red)" id="ll-rsk">—</div><div class="chip-lbl">RISK pts</div></div>
-                  <div class="chip"><div class="chip-val" style="color:var(--gold)" id="ll-rr">—</div><div class="chip-lbl">R/R</div></div>
-                  <div class="chip"><div class="chip-val" style="color:var(--cyan)" id="ll-usd">—</div><div class="chip-lbl">USD</div></div>
-                </div>
+              <div class="ext-item">
+                <div class="ext-val" id="ext-move" style="color:var(--gold)">—</div>
+                <div class="ext-lbl">Mov mediano<br>(% rango prev)</div>
               </div>
             </div>
           </div>
-
-        </div>
-      </div>
-
-      <!-- ── CHECKLIST ── -->
-      <div class="checklist">
-        <div class="cl-title">Checklist del Dia — Paso a Paso</div>
-
-        <div class="cl-section">
-          <div class="cl-sec-label">Noche anterior (ya hecho)</div>
-          <div class="cl-item"><div class="cl-check done" onclick="toggleCheck(this)">&#10003;</div><div class="cl-text">Datos ingresados: H/L/C del dia anterior</div></div>
-          <div class="cl-item"><div class="cl-check done" onclick="toggleCheck(this)">&#10003;</div><div class="cl-text">Niveles calculados y anotados</div></div>
-          <div class="cl-item"><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text">Verificar si manana es <strong>Lunes</strong> &rarr; NO OPERAR si es Lunes</div></div>
         </div>
 
-        <div class="cl-section">
-          <div class="cl-sec-label">Pre-mercado (8:45 AM)</div>
-          <div class="cl-item"><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text">Verificar el OPEN de hoy &rarr; recalcular gap si es distinto al estimado</div></div>
-          <div class="cl-item"><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text">Confirmar setup activo: <span id="cl-active-setup" class="cl-price">—</span></div></div>
-          <div class="cl-item"><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text">Programar alerta en broker para nivel de entrada</div></div>
-          <div class="cl-item"><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text">Revisar noticias del dia (FOMC, CPI, NFP) &rarr; NO operar en dias de datos clave</div></div>
+        <!-- SETUPS -->
+        <div class="bias-row">
+          <!-- SHORT -->
+          <div class="bias-card" id="ps-short">
+            <div class="bias-hdr">
+              <span class="bias-dir dir-s">&#9660; SHORT</span>
+              <span class="bias-stat" id="ps-short-st">ACTIVO</span>
+            </div>
+            <table class="ptable">
+              <tr><td class="ptl">Entrada</td><td class="ptv en" id="ss-en">—</td></tr>
+              <tr><td class="ptl"><div>Target S1</div><div class="ptsub" id="ss-tpts"></div></td><td class="ptv ts" id="ss-tgt">—</td></tr>
+              <tr><td class="ptl"><div>Stop</div><div class="ptsub" id="ss-spts"></div></td><td class="ptv st" id="ss-stp">—</td></tr>
+            </table>
+            <div class="divider"></div>
+            <div class="chips">
+              <div class="chip"><div class="chip-v" style="color:var(--green)" id="ss-rwd">—</div><div class="chip-l">RWD</div></div>
+              <div class="chip"><div class="chip-v" style="color:var(--red)" id="ss-rsk">—</div><div class="chip-l">RISK</div></div>
+              <div class="chip"><div class="chip-v" style="color:var(--gold)" id="ss-rr">—</div><div class="chip-l">R/R</div></div>
+              <div class="chip"><div class="chip-v" style="color:var(--cyan)" id="ss-usd">—</div><div class="chip-l">USD</div></div>
+            </div>
+          </div>
+          <!-- LONG -->
+          <div class="bias-card" id="ps-long">
+            <div class="bias-hdr">
+              <span class="bias-dir dir-l">&#9650; LONG</span>
+              <span class="bias-stat" id="ps-long-st">ACTIVO</span>
+            </div>
+            <table class="ptable">
+              <tr><td class="ptl">Entrada</td><td class="ptv en" id="ll-en">—</td></tr>
+              <tr><td class="ptl"><div>Target R1</div><div class="ptsub" id="ll-tpts"></div></td><td class="ptv tl" id="ll-tgt">—</td></tr>
+              <tr><td class="ptl"><div>Stop</div><div class="ptsub" id="ll-spts"></div></td><td class="ptv st" id="ll-stp">—</td></tr>
+            </table>
+            <div class="divider"></div>
+            <div class="chips">
+              <div class="chip"><div class="chip-v" style="color:var(--green)" id="ll-rwd">—</div><div class="chip-l">RWD</div></div>
+              <div class="chip"><div class="chip-v" style="color:var(--red)" id="ll-rsk">—</div><div class="chip-l">RISK</div></div>
+              <div class="chip"><div class="chip-v" style="color:var(--gold)" id="ll-rr">—</div><div class="chip-l">R/R</div></div>
+              <div class="chip"><div class="chip-v" style="color:var(--cyan)" id="ll-usd">—</div><div class="chip-l">USD</div></div>
+            </div>
+          </div>
         </div>
 
-        <div class="cl-section">
-          <div class="cl-sec-label">9:00 AM EST — Hora Prime</div>
-          <div class="cl-item"><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text highlight" id="cl-rule-short">SHORT: Si precio llega a <span class="cl-price" id="cl-entry-s">—</span> con volumen bajo &rarr; ENTRAR SHORT</div></div>
-          <div class="cl-item"><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text highlight" id="cl-rule-long">LONG: Si precio llega a <span class="cl-price" id="cl-entry-l">—</span> con volumen bajo &rarr; ENTRAR LONG</div></div>
-          <div class="cl-item"><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text">Volumen bajo = la barra llega al nivel lentamente, sin momentum fuerte, velas chicas</div></div>
-          <div class="cl-item"><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text">Si el nivel se rompe con velas grandes y aceleracion &rarr; NO ENTRAR, esperar siguiente hora</div></div>
-        </div>
-
-        <div class="cl-section">
-          <div class="cl-sec-label">Al entrar</div>
-          <div class="cl-item"><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text">1 contrato ES &rarr; Stop inmediato en broker</div></div>
-          <div class="cl-item"><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text" id="cl-stop-s">SHORT Stop: <span class="cl-price" id="cl-stp-s">—</span> &nbsp;|&nbsp; Long Stop: <span class="cl-price" id="cl-stp-l">—</span></div></div>
-          <div class="cl-item"><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text" id="cl-tgt-txt">Target SHORT: <span class="cl-price" id="cl-tgt-s">—</span> &nbsp;|&nbsp; Target LONG: <span class="cl-price" id="cl-tgt-l">—</span></div></div>
-          <div class="cl-item"><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text">Solo 1 trade por dia. Si se ejecuta (win o loss), CERRAR PLATAFORMA.</div></div>
-        </div>
-
-        <div class="cl-section">
-          <div class="cl-sec-label">Si no hay setup a las 9AM</div>
-          <div class="cl-item"><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text">Esperar hasta 10AM (100% WR clean, 84 trades). Mismos niveles.</div></div>
-          <div class="cl-item"><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text">Si tampoco a las 10AM &rarr; 11AM-1PM aceptable, WR baja un poco</div></div>
-          <div class="cl-item"><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text">Despues de 2PM &rarr; NO OPERAR. El edge se pierde.</div></div>
-        </div>
-      </div>
-
-      <!-- ── LADDER ── -->
-      <div class="ladder-card">
-        <div class="ladder-hdr">
-          <span class="ladder-ttl">Escalera de Precios</span>
-          <span class="ladder-hint">Delta vs prev close</span>
-        </div>
-        <div id="ladder-body"></div>
-      </div>
-
-    </div><!-- plan-wrap -->
-
-    <!-- SCHEDULE -->
-    <div>
-      <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--txt2);margin-bottom:8px">Horario Optimo RTH</div>
-      <div class="sch-row">
-        <div class="sch prime"><div class="sch-h">9</div><div class="sch-ap">AM</div><div class="sch-wr" style="color:var(--green)">99.7%</div><div class="sch-n">313 clean</div><div class="tag tp">PRIME</div></div>
-        <div class="sch strong"><div class="sch-h">10</div><div class="sch-ap">AM</div><div class="sch-wr" style="color:var(--cyan)">100%</div><div class="sch-n">84 clean</div><div class="tag ts">STRONG</div></div>
-        <div class="sch good"><div class="sch-h">11</div><div class="sch-ap">AM</div><div class="sch-wr" style="color:var(--gold)">98.2%</div><div class="sch-n">55 clean</div><div class="tag tg">GOOD</div></div>
-        <div class="sch good"><div class="sch-h">12</div><div class="sch-ap">PM</div><div class="sch-wr" style="color:var(--gold)">100%</div><div class="sch-n">49 clean</div><div class="tag tg">MOD</div></div>
-        <div class="sch good"><div class="sch-h">1</div><div class="sch-ap">PM</div><div class="sch-wr" style="color:var(--gold)">100%</div><div class="sch-n">31 clean</div><div class="tag tg">MOD</div></div>
-        <div class="sch avoid"><div class="sch-h">2</div><div class="sch-ap">PM</div><div class="sch-wr" style="color:var(--red)">81.1%</div><div class="sch-n">12 clean</div><div class="tag ta">EVITAR</div></div>
       </div>
     </div>
 
-    <!-- CHARTS -->
-    <div class="charts-row">
-      <div class="chart-card"><div class="chart-ttl">PnL por ano h=9</div><div class="cw"><canvas id="pnlC"></canvas></div></div>
-      <div class="chart-card"><div class="chart-ttl">Win Rate Clean h=9</div><div class="cw"><canvas id="wrC"></canvas></div></div>
-      <div class="chart-card" style="display:flex;flex-direction:column"><div class="chart-ttl">Tipo de cierre</div><div style="flex:1;position:relative"><canvas id="pieC"></canvas></div></div>
+    <!-- ── CHECKLIST ── -->
+    <div class="cl">
+      <div class="cl-title">Checklist — Paso a Paso</div>
+
+      <div class="cl-sec">
+        <div class="cl-sl">Noche anterior</div>
+        <div class="cl-item"><div class="ck done" onclick="tgl(this)">&#10003;</div><div class="ct">Datos ingresados: H/L/C sesion anterior + Open Futuros 6PM</div></div>
+        <div class="cl-item"><div class="ck done" onclick="tgl(this)">&#10003;</div><div class="ct">Niveles calculados y anotados. Bias de sesion identificado.</div></div>
+        <div class="cl-item"><div class="ck" onclick="tgl(this)"></div><div class="ct">Verificar si manana es <strong>Lunes</strong> — NO OPERAR si es Lunes</div></div>
+        <div class="cl-item"><div class="ck" onclick="tgl(this)"></div><div class="ct">Verificar calendario economico (FOMC/CPI/NFP) — evitar dias de noticias clave</div></div>
+      </div>
+
+      <div class="cl-sec">
+        <div class="cl-sl">Overnight (6PM - 9AM)</div>
+        <div class="cl-item"><div class="ck" onclick="tgl(this)"></div><div class="ct">Observar si el mercado toca la zona alta (<span class="cp" id="cl-top-zone">—</span>) o zona baja (<span class="cp" id="cl-bot-zone">—</span>)</div></div>
+        <div class="cl-item"><div class="ck" onclick="tgl(this)"></div><div class="ct hi">Si toca zona alta overnight: <strong>bias SHORT</strong> para la sesion RTH (44.7% probabilidad de completar a zona baja sin filtro vol)</div></div>
+        <div class="cl-item"><div class="ck" onclick="tgl(this)"></div><div class="ct hi">Si toca zona baja overnight: <strong>bias LONG</strong> para la sesion RTH (52.4% probabilidad de completar a zona alta sin filtro vol)</div></div>
+        <div class="cl-item"><div class="ck" onclick="tgl(this)"></div><div class="ct">Con <strong>filtro de volumen</strong> activo (vol bajo en la entrada): WR sube a 99.7% — ese es el edge</div></div>
+      </div>
+
+      <div class="cl-sec">
+        <div class="cl-sl">9:00 AM EST — Hora Prime</div>
+        <div class="cl-item"><div class="ck" onclick="tgl(this)"></div><div class="ct">Confirmar Open RTH. Recalcular gap si cambia el bias.</div></div>
+        <div class="cl-item"><div class="ck" onclick="tgl(this)"></div><div class="ct hi">SHORT: Si precio llega a <span class="cp" id="cl-en-s">—</span> con VOLUMEN BAJO → ENTRAR SHORT</div></div>
+        <div class="cl-item"><div class="ck" onclick="tgl(this)"></div><div class="ct hi">LONG: Si precio llega a <span class="cp" id="cl-en-l">—</span> con VOLUMEN BAJO → ENTRAR LONG</div></div>
+        <div class="cl-item"><div class="ck" onclick="tgl(this)"></div><div class="ct">VOLUMEN BAJO = velas chicas, movimiento lento al nivel, sin momentum. Si llega rapido y fuerte = NO ENTRAR.</div></div>
+      </div>
+
+      <div class="cl-sec">
+        <div class="cl-sl">Al entrar</div>
+        <div class="cl-item"><div class="ck" onclick="tgl(this)"></div><div class="ct">Stop SHORT: <span class="cp" id="cl-st-s">—</span> &nbsp;|&nbsp; Stop LONG: <span class="cp" id="cl-st-l">—</span></div></div>
+        <div class="cl-item"><div class="ck" onclick="tgl(this)"></div><div class="ct">Target SHORT: <span class="cp" id="cl-tg-s">—</span> &nbsp;|&nbsp; Target LONG: <span class="cp" id="cl-tg-l">—</span></div></div>
+        <div class="cl-item"><div class="ck" onclick="tgl(this)"></div><div class="ct">1 contrato. 1 trade por dia. Si se ejecuta (win o loss) — cerrar.</div></div>
+      </div>
+
+      <div class="cl-sec">
+        <div class="cl-sl">Si no hay setup a 9AM</div>
+        <div class="cl-item"><div class="ck" onclick="tgl(this)"></div><div class="ct">10AM: 100% WR clean (84 trades) — esperar mismo nivel</div></div>
+        <div class="cl-item"><div class="ck" onclick="tgl(this)"></div><div class="ct">11AM-1PM: WR baja un poco pero sigue siendo valido</div></div>
+        <div class="cl-item"><div class="ck" onclick="tgl(this)"></div><div class="ct">2PM+: NO OPERAR. Edge estadistico desaparece despues de las 2PM.</div></div>
+      </div>
     </div>
 
-    <div class="warn">&#9888;&nbsp; <span><strong>Backtest 2015-2026.</strong> 89% target hits reales en h=9. 1 stop en 11 anos. Vol percentil full-dataset (minor lookahead). <strong>No Lunes. No 2PM+.</strong> 1 contrato. Performance pasado no garantiza futuros.</span></div>
+    <!-- ── LADDER ── -->
+    <div class="ladder-card">
+      <div class="ladder-hdr">
+        <span class="ltitle">Escalera de Precios</span>
+        <span class="lhint">Delta vs prev close</span>
+      </div>
+      <div id="ladder-body"></div>
+    </div>
 
-  </div><!-- main -->
-</div><!-- content -->
+  </div><!-- plan-wrap -->
+
+  <!-- SCHEDULE -->
+  <div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--txt2);margin-bottom:8px">Horario RTH — Win Rate Clean</div>
+    <div class="sch-row">
+      <div class="sch prime"><div class="sch-h">9</div><div class="sch-ap">AM</div><div class="sch-wr" style="color:var(--green)">99.7%</div><div class="sch-n">313 clean</div><div class="tag tp">PRIME</div></div>
+      <div class="sch strong"><div class="sch-h">10</div><div class="sch-ap">AM</div><div class="sch-wr" style="color:var(--cyan)">100%</div><div class="sch-n">84 clean</div><div class="tag ts">STRONG</div></div>
+      <div class="sch good"><div class="sch-h">11</div><div class="sch-ap">AM</div><div class="sch-wr" style="color:var(--gold)">98.2%</div><div class="sch-n">55 clean</div><div class="tag tg">GOOD</div></div>
+      <div class="sch good"><div class="sch-h">12</div><div class="sch-ap">PM</div><div class="sch-wr" style="color:var(--gold)">100%</div><div class="sch-n">49 clean</div><div class="tag tg">MOD</div></div>
+      <div class="sch good"><div class="sch-h">1</div><div class="sch-ap">PM</div><div class="sch-wr" style="color:var(--gold)">100%</div><div class="sch-n">31 clean</div><div class="tag tg">MOD</div></div>
+      <div class="sch avoid"><div class="sch-h">2</div><div class="sch-ap">PM</div><div class="sch-wr" style="color:var(--red)">81.1%</div><div class="sch-n">12 clean</div><div class="tag ta">EVITAR</div></div>
+    </div>
+  </div>
+
+  <!-- CHARTS -->
+  <div class="charts-row">
+    <div class="chart-card"><div class="ctitle">PnL por ano h=9</div><div class="cw"><canvas id="pnlC"></canvas></div></div>
+    <div class="chart-card"><div class="ctitle">Win Rate Clean h=9</div><div class="cw"><canvas id="wrC"></canvas></div></div>
+    <div class="chart-card" style="display:flex;flex-direction:column"><div class="ctitle">Tipo de cierre</div><div style="flex:1;position:relative"><canvas id="pieC"></canvas></div></div>
+  </div>
+
+  <div class="warn">&#9888;&nbsp;<span><strong>Honestidad:</strong> WR 99.7% es con filtro volumen. Sin filtro: 44-52% extremo->extremo (datos historicos 2015-2026). <strong>No Lunes. No 2PM+.</strong> 1 contrato. Backtest no garantiza resultados futuros.</span></div>
+
+</div>
+</div>
 
 <div class="sbar">
-  <span>Sistema: 1P + PIVOT-TR</span>
-  <span>|</span><span>Databento 2015-2026</span>
-  <span>|</span><span>RTH 09:00-15:59 ET</span>
-  <span>|</span><span>1 trade/dia · primer setup · vol ratio &le; 1.0</span>
+  <span>1P + PIVOT-TR</span><span>|</span><span>Databento 2015-2026</span><span>|</span><span>RTH 09:00-15:59 ET</span><span>|</span><span>Futuros open: 18:00 ET</span><span>|</span><span>1 trade/dia</span>
 </div>
 </div>
 
 <script>
+// ─── HISTORICAL DATA ───
 const BY=[{y:2015,n:16,wr:100,pnl:7630},{y:2016,n:11,wr:90.9,pnl:5476},{y:2017,n:45,wr:100,pnl:11085},{y:2018,n:36,wr:100,pnl:23232},{y:2019,n:30,wr:100,pnl:15613},{y:2020,n:24,wr:100,pnl:28499},{y:2021,n:30,wr:100,pnl:22444},{y:2022,n:14,wr:100,pnl:22329},{y:2023,n:16,wr:100,pnl:18890},{y:2024,n:40,wr:100,pnl:51948},{y:2025,n:48,wr:100,pnl:66847},{y:2026,n:3,wr:100,pnl:2781}];
-let lastCalc=null;
 
+// Extreme stats from backtest (script 10)
+const EXT={
+  overnight:{short:44.7,long:52.4},
+  rth_h9:   {short:50.3,long:50.3},
+  move_pct: {short:{p25:29,p50:58,p75:106},long:{p25:39,p50:66,p75:110}},
+  fo_zone:  {HIGH_ZONE:{short:35.5,long:46.0},MIDDLE:{short:52.4,long:56.5},LOW_ZONE:{short:37.3,long:41.1}}
+};
+
+let lastCalc=null;
 function f(n,d=2){return n.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d})}
 function sgn(n){return n>=0?'+':''}
 function dow(d){return['Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'][d]}
+function set(id,v){const el=document.getElementById(id);if(el)el.textContent=v}
+
+// Live FO bar update
+['iFO','iH','iL'].forEach(id=>document.getElementById(id).addEventListener('input',updateFOBar));
+function updateFOBar(){
+  const fo=parseFloat(document.getElementById('iFO').value);
+  const H =parseFloat(document.getElementById('iH').value);
+  const L =parseFloat(document.getElementById('iL').value);
+  const sec=document.getElementById('fo-bar-section');
+  if(isNaN(fo)||isNaN(H)||isNaN(L)||H<=L){sec.classList.add('hidden');return;}
+  sec.classList.remove('hidden');
+  const pct=Math.max(0,Math.min(1,(fo-L)/(H-L)));
+  document.getElementById('fo-marker').style.left=(pct*100).toFixed(1)+'%';
+  document.getElementById('fo-marker').style.background=pct>=0.75?'var(--red)':pct<=0.25?'var(--green)':'var(--cyan)';
+  const badge=document.getElementById('fo-zone-badge');
+  if(pct>=0.75){badge.className='fo-zone-badge fz-high';badge.textContent='HIGH ZONE — Bias SHORT';}
+  else if(pct<=0.25){badge.className='fo-zone-badge fz-low';badge.textContent='LOW ZONE — Bias LONG';}
+  else{badge.className='fo-zone-badge fz-mid';badge.textContent='MIDDLE — Ambas direcciones';}
+  // Update hint
+  document.getElementById('fo-prev').innerHTML=`FO = <strong style="color:${pct>=0.75?'var(--red)':pct<=0.25?'var(--green)':'var(--cyan)'}">${f(fo)}</strong> · ${(pct*100).toFixed(0)}% del rango previo`;
+}
 
 // Gap preview
 ['iO','iC'].forEach(id=>document.getElementById(id).addEventListener('input',gapPrev));
@@ -373,26 +455,29 @@ function gapPrev(){
   if(!isNaN(o)&&!isNaN(c)){
     const g=o-c;
     const col=g>0?'var(--red)':g<0?'var(--green)':'var(--cyan)';
-    const dir=g>0?'UP (bias SHORT)':g<0?'DOWN (bias LONG)':'FLAT';
-    el.innerHTML=`Gap: <span style="color:${col};font-weight:700">${sgn(g)+f(g)} &mdash; ${dir}</span>`;
-  } else el.textContent='Gap: ingresa Open';
+    el.innerHTML=`Gap RTH: <strong style="color:${col}">${sgn(g)+f(g)} ${g>0?'UP':'DOWN'}</strong>`;
+  }else el.textContent='Gap RTH: ingresa para calcular';
 }
 
 function calc(){
   const H=parseFloat(document.getElementById('iH').value);
   const L=parseFloat(document.getElementById('iL').value);
   const C=parseFloat(document.getElementById('iC').value);
+  const FO=parseFloat(document.getElementById('iFO').value);
   const O=parseFloat(document.getElementById('iO').value);
+
   let err=false;
   ['iH','iL','iC'].forEach(id=>{const v=parseFloat(document.getElementById(id).value);document.getElementById(id).classList.toggle('err',isNaN(v));if(isNaN(v))err=true;});
   if(err||H<=L){if(!err)alert('High debe ser mayor que Low');return;}
 
-  const gap=isNaN(O)?0:O-C;
+  // Use FO as gap anchor if available, else RTH open, else 0
+  const anchor=!isNaN(FO)?FO:(!isNaN(O)?O:C);
+  const gap=anchor-C;
   const gap_abs=Math.abs(gap);
   const rng=H-L;
   const TR=rng+gap_abs;
   const piv=H-TR/2;
-  const r1=piv+TR/4, r2=piv+TR/2, s1=piv-TR/4, s2=piv-TR/2;
+  const r1=piv+TR/4, s1=piv-TR/4, s2=piv-TR/2;
   const tr75=rng*0.75, op=tr75*0.25;
   const en_s=C+op, en_l=C-op;
   const tgt_s=s1, tgt_l=r1;
@@ -400,125 +485,132 @@ function calc(){
   const rwd_s=en_s-tgt_s, rsk_s=stp_s-en_s;
   const rwd_l=tgt_l-en_l, rsk_l=en_l-stp_l;
 
-  lastCalc={H,L,C,O,gap,rng,TR,piv,r1,r2,s1,s2,tr75,op,en_s,en_l,tgt_s,tgt_l,stp_s,stp_l,rwd_s,rsk_s,rwd_l,rsk_l};
+  // FO zone
+  const fo_pct=!isNaN(FO)?(FO-L)/rng:null;
+  const fo_zone=fo_pct===null?null:fo_pct>=0.75?'HIGH_ZONE':fo_pct<=0.25?'LOW_ZONE':'MIDDLE';
+
+  lastCalc={H,L,C,FO:isNaN(FO)?null:FO,O:isNaN(O)?null:O,gap,rng,TR,piv,r1,s1,s2,tr75,op,en_s,en_l,tgt_s,tgt_l,stp_s,stp_l,rwd_s,rsk_s,rwd_l,rsk_l,fo_zone,fo_pct};
 
   // Derived
   document.getElementById('dbox-section').classList.remove('hidden');
-  document.getElementById('d-rng').textContent=f(rng);
+  set('d-rng',f(rng));
   const ge=document.getElementById('d-gap');
-  ge.textContent=sgn(gap)+f(gap);
-  ge.style.color=gap>0?'var(--red)':gap<0?'var(--green)':'var(--cyan)';
-  document.getElementById('d-tr').textContent=f(TR);
-  document.getElementById('d-piv').textContent=f(piv);
-  document.getElementById('d-tr75').textContent=f(tr75);
-  document.getElementById('d-1p').textContent=f(op);
+  ge.textContent=sgn(gap)+f(gap);ge.style.color=gap>0?'var(--red)':gap<0?'var(--green)':'var(--cyan)';
+  set('d-tr',f(TR));set('d-piv',f(piv));set('d-tr75',f(tr75));set('d-1p',f(op));
 
   // Plan header
   const now=new Date();
-  const tomorrow=new Date(now); tomorrow.setDate(tomorrow.getDate()+1);
-  const tomorrowDow=tomorrow.getDay();
-  const isMonday=tomorrowDow===1;
-  document.getElementById('plan-date-hdr').textContent='MANANA '+dow(tomorrowDow).toUpperCase()+' '+tomorrow.toLocaleDateString('es',{day:'2-digit',month:'2-digit',year:'numeric'});
-  document.getElementById('plan-subtitle').textContent=(isMonday?'⚠ LUNES — NO OPERAR SEGUN REGLA HISTORICA':'Datos base: Close='+f(C)+' | Range='+f(rng)+' | TR='+f(TR));
+  const tmr=new Date(now);tmr.setDate(tmr.getDate()+1);
+  const isMonday=tmr.getDay()===1;
+  set('plan-title','PLAN — '+dow(tmr.getDay()).toUpperCase()+' '+tmr.toLocaleDateString('es',{day:'2-digit',month:'2-digit',year:'numeric'}));
+  set('plan-meta',(isMonday?'LUNES — CONSIDERAR NO OPERAR | ':'')+
+    'Close='+f(C)+' | Range='+f(rng)+'pts | TR='+f(TR)+'pts'+
+    (fo_zone?' | FO='+fo_zone:''));
 
-  // Gap strip
-  const gs=document.getElementById('gap-strip');
-  const gl=document.getElementById('gap-lbl');
-  const gd=document.getElementById('gap-desc');
-  const gp=document.getElementById('gap-pts');
-  const gdir=gap>0?'up':gap<0?'down':'flat';
-  gs.className='gap-strip '+gdir;
-  gl.className='gap-label '+gdir;
-  gl.textContent=gap>0?'GAP UP':gap<0?'GAP DOWN':'SIN GAP';
-  gd.textContent=gap>0?'Precio abrio arriba — bias SHORT, esperar reversal hacia abajo':gap<0?'Precio abrio abajo — bias LONG, esperar reversal hacia arriba':'Sin gap significativo — ambas direcciones validas';
-  gp.textContent=gap!==0?sgn(gap)+f(gap)+' pts':'';
-  gp.style.color=gap>0?'var(--red)':gap<0?'var(--green)':'var(--txt2)';
+  // FO context
+  const foSec=document.getElementById('fo-context');
+  if(fo_zone){
+    foSec.classList.remove('hidden');
+    const extStats=EXT.fo_zone[fo_zone]||{short:0,long:0};
+    const biasDir=fo_zone==='HIGH_ZONE'?'short':fo_zone==='LOW_ZONE'?'long':'both';
+    // Bias cards
+    const overnight_s=EXT.overnight.short,overnight_l=EXT.overnight.long;
+    const activeDir=gap>0?'short':gap<0?'long':'both';
+    document.getElementById('bias-row').innerHTML=`
+      <div class="bias-card ${biasDir==='short'||biasDir==='both'?'active-short':'inactive'}">
+        <div class="bias-hdr"><span class="bias-dir dir-s">&#9660; SHORT</span>
+          <span class="bias-stat ${biasDir==='short'||biasDir==='both'?'bs-active':'bs-inactive'}">${biasDir==='short'?'BIAS':'NEUTRO'}</span></div>
+        <div class="prob-wrap">
+          <div class="prob-label"><span>Reach zona opuesta</span><span style="color:var(--red)">${extStats.short}%</span></div>
+          <div class="prob-track"><div class="prob-bar" style="width:${extStats.short}%;background:var(--red)"></div></div>
+        </div>
+        <div style="font-size:10px;color:var(--txt2)">FO en ${fo_zone} | Hist: ${extStats.short}% sin vol filtro</div>
+      </div>
+      <div class="bias-card ${biasDir==='long'||biasDir==='both'?'active-long':'inactive'}">
+        <div class="bias-hdr"><span class="bias-dir dir-l">&#9650; LONG</span>
+          <span class="bias-stat ${biasDir==='long'||biasDir==='both'?'bs-active':'bs-inactive'}">${biasDir==='long'?'BIAS':'NEUTRO'}</span></div>
+        <div class="prob-wrap">
+          <div class="prob-label"><span>Reach zona opuesta</span><span style="color:var(--green)">${extStats.long}%</span></div>
+          <div class="prob-track"><div class="prob-bar" style="width:${extStats.long}%;background:var(--green)"></div></div>
+        </div>
+        <div style="font-size:10px;color:var(--txt2)">FO en ${fo_zone} | Hist: ${extStats.long}% sin vol filtro</div>
+      </div>`;
+    // Extreme stats
+    const dir=biasDir==='short'?'SHORT':biasDir==='long'?'LONG':'ambos';
+    set('ext-overnight',(biasDir==='short'?overnight_s:biasDir==='long'?overnight_l:((overnight_s+overnight_l)/2).toFixed(0))+'%');
+    set('ext-h9',(biasDir==='short'?EXT.rth_h9.short:biasDir==='long'?EXT.rth_h9.long:EXT.rth_h9.short)+'%');
+    set('ext-move',(biasDir==='short'?EXT.move_pct.short.p50:biasDir==='long'?EXT.move_pct.long.p50:Math.round((EXT.move_pct.short.p50+EXT.move_pct.long.p50)/2))+'%');
+  }else foSec.classList.add('hidden');
 
-  // Setups
-  const shortActive=gap>=0, longActive=gap<=0;
-  document.getElementById('ps-short').classList.toggle('inactive',!shortActive);
-  document.getElementById('ps-long').classList.toggle('inactive',!longActive);
-  document.getElementById('ps-short-status').textContent=shortActive?'ACTIVO':'INACTIVO';
-  document.getElementById('ps-short-status').className='psetup-status '+(shortActive?'status-active':'status-inactive');
-  document.getElementById('ps-long-status').textContent=longActive?'ACTIVO':'INACTIVO';
-  document.getElementById('ps-long-status').className='psetup-status '+(longActive?'status-active':'status-inactive');
+  // Setup cards
+  const shortA=gap>=0,longA=gap<=0;
+  const sc=document.getElementById('ps-short');sc.className='bias-card '+(shortA?'active-short':'inactive');
+  const lc=document.getElementById('ps-long');lc.className='bias-card '+(longA?'active-long':'inactive');
+  set('ps-short-st',shortA?'ACTIVO':'INACTIVO');document.getElementById('ps-short-st').className='bias-stat '+(shortA?'bs-active':'bs-inactive');
+  set('ps-long-st',longA?'ACTIVO':'INACTIVO');document.getElementById('ps-long-st').className='bias-stat '+(longA?'bs-active':'bs-inactive');
 
-  // Short values
-  set('ss-en',f(en_s)); set('ss-tgt',f(tgt_s)); set('ss-stp',f(stp_s));
-  set('ss-tpts',f(rwd_s,1)+' pts abajo'); set('ss-spts',f(rsk_s,1)+' pts arriba');
-  set('ss-rwd',f(rwd_s,1)); set('ss-rsk',f(rsk_s,1));
-  set('ss-rr','1:'+(rwd_s/rsk_s).toFixed(2)); set('ss-usd','$'+Math.round(rwd_s*50).toLocaleString());
-  // Long values
-  set('ll-en',f(en_l)); set('ll-tgt',f(tgt_l)); set('ll-stp',f(stp_l));
-  set('ll-tpts',f(rwd_l,1)+' pts arriba'); set('ll-spts',f(rsk_l,1)+' pts abajo');
-  set('ll-rwd',f(rwd_l,1)); set('ll-rsk',f(rsk_l,1));
-  set('ll-rr','1:'+(rwd_l/rsk_l).toFixed(2)); set('ll-usd','$'+Math.round(rwd_l*50).toLocaleString());
+  set('ss-en',f(en_s));set('ss-tgt',f(tgt_s));set('ss-stp',f(stp_s));
+  set('ss-tpts',f(rwd_s,1)+' pts reward');set('ss-spts',f(rsk_s,1)+' pts risk');
+  set('ss-rwd',f(rwd_s,1));set('ss-rsk',f(rsk_s,1));
+  set('ss-rr','1:'+(rwd_s/rsk_s).toFixed(2));set('ss-usd','$'+Math.round(rwd_s*50).toLocaleString());
+  set('ll-en',f(en_l));set('ll-tgt',f(tgt_l));set('ll-stp',f(stp_l));
+  set('ll-tpts',f(rwd_l,1)+' pts reward');set('ll-spts',f(rsk_l,1)+' pts risk');
+  set('ll-rwd',f(rwd_l,1));set('ll-rsk',f(rsk_l,1));
+  set('ll-rr','1:'+(rwd_l/rsk_l).toFixed(2));set('ll-usd','$'+Math.round(rwd_l*50).toLocaleString());
 
   // Checklist
-  const activeTxt=gap>0?'Solo SHORT activo (gap up)':gap<0?'Solo LONG activo (gap down)':'SHORT + LONG (sin gap)';
-  set('cl-active-setup',activeTxt);
-  set('cl-entry-s',f(en_s)); set('cl-entry-l',f(en_l));
-  set('cl-stp-s',f(stp_s)); set('cl-stp-l',f(stp_l));
-  set('cl-tgt-s',f(tgt_s)); set('cl-tgt-l',f(tgt_l));
-  // Dim inactive rules
-  document.getElementById('cl-rule-short').style.opacity=shortActive?1:0.4;
-  document.getElementById('cl-rule-long').style.opacity=longActive?1:0.4;
+  const top_zone=H-rng*0.25,bot_zone=L+rng*0.25;
+  set('cl-top-zone',f(top_zone));set('cl-bot-zone',f(bot_zone));
+  set('cl-en-s',f(en_s));set('cl-en-l',f(en_l));
+  set('cl-st-s',f(stp_s));set('cl-st-l',f(stp_l));
+  set('cl-tg-s',f(tgt_s));set('cl-tg-l',f(tgt_l));
 
-  // Monday warning
-  if(isMonday){
-    const s=document.getElementById('gap-strip');
-    s.style.borderColor='var(--gold)';
-    s.style.background='rgba(251,191,36,0.05)';
-    document.getElementById('gap-desc').innerHTML='<strong style="color:var(--gold)">LUNES — historicamente peor dia. Considerar no operar.</strong>';
-  }
-
-  // Ladder
-  buildLadder(lastCalc);
+  buildLadder({H,L,C,FO:isNaN(FO)?null:FO,piv,en_s,en_l,tgt_s,tgt_l,stp_s,stp_l,top_zone,bot_zone,rng});
 
   document.getElementById('empty').classList.add('hidden');
   document.getElementById('plan-wrap').classList.remove('hidden');
-  // Reset checklist
-  document.querySelectorAll('.cl-check').forEach((el,i)=>{if(i<2){el.classList.add('done');el.textContent='✓';}else{el.classList.remove('done');el.textContent='';}});
+  document.querySelectorAll('.ck').forEach((el,i)=>{if(i<2){el.classList.add('done');el.textContent='&#10003;';}else{el.classList.remove('done');el.textContent='';}});
 }
-
-function set(id,val){document.getElementById(id).textContent=val}
 
 function buildLadder(d){
   const levels=[
-    {p:d.stp_s, lbl:'Stop SHORT',       c:'#f87171',glow:false,dim:true},
-    {p:d.H,     lbl:'prev High',         c:'#475569',glow:false,dim:true},
-    {p:d.en_s,  lbl:'Entry SHORT',       c:'#f87171',glow:true, dim:false},
-    {p:d.tgt_l, lbl:'Target LONG (R1)',  c:'#34d399',glow:false,dim:false},
-    {p:d.C,     lbl:'prev Close',        c:'#38bdf8',glow:true, dim:false},
-    {p:d.piv,   lbl:'PIVOT',             c:'#fbbf24',glow:true, dim:false},
-    {p:d.en_l,  lbl:'Entry LONG',        c:'#34d399',glow:true, dim:false},
-    {p:d.tgt_s, lbl:'Target SHORT (S1)', c:'#f87171',glow:false,dim:false},
-    {p:d.L,     lbl:'prev Low',          c:'#475569',glow:false,dim:true},
-    {p:d.stp_l, lbl:'Stop LONG',         c:'#34d399',glow:false,dim:true},
-  ].sort((a,b)=>b.p-a.p);
+    {p:d.stp_s,  lbl:'Stop SHORT',        c:'#f87171',g:false,dim:true},
+    {p:d.H,      lbl:'prev High (extreme)',c:'#94a3b8',g:false,dim:true},
+    {p:d.top_zone,lbl:'Zona Alta (top 25%)',c:'#f87171',g:false,dim:false},
+    {p:d.en_s,   lbl:'Entry SHORT (1P)',   c:'#f87171',g:true, dim:false},
+    {p:d.tgt_l,  lbl:'Target LONG R1',    c:'#34d399',g:false,dim:false},
+    {p:d.C,      lbl:'prev Close',         c:'#38bdf8',g:true, dim:false},
+    {p:d.piv,    lbl:'PIVOT',              c:'#fbbf24',g:true, dim:false},
+    {p:d.en_l,   lbl:'Entry LONG (1P)',    c:'#34d399',g:true, dim:false},
+    {p:d.tgt_s,  lbl:'Target SHORT S1',   c:'#f87171',g:false,dim:false},
+    {p:d.bot_zone,lbl:'Zona Baja (bot 25%)',c:'#34d399',g:false,dim:false},
+    {p:d.L,      lbl:'prev Low (extreme)', c:'#94a3b8',g:false,dim:true},
+    {p:d.stp_l,  lbl:'Stop LONG',         c:'#34d399',g:false,dim:true},
+  ];
+  if(d.FO!==null) levels.push({p:d.FO,lbl:'Futures Open (6PM)',c:'#a78bfa',g:true,dim:false});
+  levels.sort((a,b)=>b.p-a.p);
   const hi=levels[0].p,lo=levels[levels.length-1].p,sp=hi-lo||1;
   document.getElementById('ladder-body').innerHTML=levels.map(lv=>{
     const pct=((lv.p-lo)/sp*100).toFixed(1);
     const delta=lv.p-d.C;
-    const dcol=delta>0?'var(--green)':delta<0?'var(--red)':'var(--txt2)';
-    return`<div class="lrow" style="opacity:${lv.dim?0.45:1}">
-      <div class="ldot" style="background:${lv.c}${lv.glow?';box-shadow:0 0 5px '+lv.c:''}"></div>
-      <div class="lname" style="color:${lv.glow?lv.c:'var(--txt)'};font-weight:${lv.glow?600:400}">${lv.lbl}</div>
-      <div class="lbar-wrap"><div class="lbar" style="width:${pct}%;background:${lv.c};opacity:${lv.glow?0.7:0.25}"></div></div>
-      <div class="ldelta" style="color:${dcol}">${sgn(delta)+f(delta,1)}</div>
-      <div class="lprice" style="color:${lv.glow?lv.c:'var(--txt)'}">${f(lv.p)}</div>
+    const dc=delta>0?'var(--green)':delta<0?'var(--red)':'var(--txt2)';
+    return`<div class="lrow" style="opacity:${lv.dim?0.4:1}">
+      <div class="ldot" style="background:${lv.c}${lv.g?';box-shadow:0 0 5px '+lv.c:''}"></div>
+      <div class="lname" style="color:${lv.g?lv.c:'var(--txt)'};font-weight:${lv.g?600:400}">${lv.lbl}</div>
+      <div class="lbar-wrap"><div class="lbar" style="width:${pct}%;background:${lv.c};opacity:${lv.g?0.7:0.25}"></div></div>
+      <div class="ldelta" style="color:${dc}">${sgn(delta)+f(delta,1)}</div>
+      <div class="lprice" style="color:${lv.g?lv.c:'var(--txt)'}">${f(lv.p)}</div>
     </div>`;
   }).join('');
 }
 
-function toggleCheck(el){
-  el.classList.toggle('done');
-  el.textContent=el.classList.contains('done')?'✓':'';
-}
+function tgl(el){el.classList.toggle('done');el.innerHTML=el.classList.contains('done')?'&#10003;':'';}
 
 function reset(){
-  ['iH','iL','iC','iO'].forEach(id=>{document.getElementById(id).value='';document.getElementById(id).classList.remove('err');});
-  document.getElementById('gap-prev').textContent='Gap: ingresa Open';
+  ['iH','iL','iC','iFO','iO'].forEach(id=>{document.getElementById(id).value='';document.getElementById(id).classList.remove('err');});
+  document.getElementById('gap-prev').textContent='Gap RTH: ingresa para calcular';
+  document.getElementById('fo-prev').textContent='Precio cuando abren los futuros';
+  document.getElementById('fo-bar-section').classList.add('hidden');
   document.getElementById('dbox-section').classList.add('hidden');
   document.getElementById('plan-wrap').classList.add('hidden');
   document.getElementById('empty').classList.remove('hidden');
@@ -526,29 +618,19 @@ function reset(){
 }
 
 function copyPlan(){
-  if(!lastCalc){return;}
+  if(!lastCalc)return;
   const d=lastCalc;
-  const gap=d.gap;
-  const gdir=gap>0?'UP':gap<0?'DOWN':'FLAT';
-  const txt=`PLAN DE TRADING ES — ${new Date().toLocaleDateString()}
-==========================================
-DATOS: High=${f(d.H)} | Low=${f(d.L)} | Close=${f(d.C)}
-Range=${f(d.rng)} | Gap=${sgn(gap)+f(gap)} ${gdir} | TR=${f(d.TR)}
-PIVOT=${f(d.piv)} | TR75=${f(d.tr75)} | 1P=${f(d.op)}
+  const txt=`PLAN ES — ${new Date().toLocaleDateString()}
+======================================
+H=${f(d.H)} | L=${f(d.L)} | C=${f(d.C)} | Range=${f(d.rng)}pts
+${d.FO!==null?'FO='+f(d.FO)+' ('+d.fo_zone+') | ':''}TR=${f(d.TR)} | PIVOT=${f(d.piv)}
+Zona Alta: ${f(d.H-d.rng*0.25)} | Zona Baja: ${f(d.L+d.rng*0.25)}
 
-SHORT (${gap<0?'INACTIVO':'ACTIVO'})
-  Entrada : ${f(d.en_s)}
-  Target  : ${f(d.tgt_s)}  (${f(d.rwd_s,1)} pts | $${Math.round(d.rwd_s*50).toLocaleString()})
-  Stop    : ${f(d.stp_s)}  (${f(d.rsk_s,1)} pts)
-  R/R     : 1:${(d.rwd_s/d.rsk_s).toFixed(2)}
+SHORT: Entrada=${f(d.en_s)} | Target=${f(d.tgt_s)} (+${f(d.rwd_s,1)}pts/$${Math.round(d.rwd_s*50).toLocaleString()}) | Stop=${f(d.stp_s)}
+LONG:  Entrada=${f(d.en_l)} | Target=${f(d.tgt_l)} (+${f(d.rwd_l,1)}pts/$${Math.round(d.rwd_l*50).toLocaleString()}) | Stop=${f(d.stp_l)}
+${d.fo_zone?'Bias sesion: '+(d.fo_zone==='HIGH_ZONE'?'SHORT':'d.fo_zone'==='LOW_ZONE'?'LONG':'NEUTRO'):''}
 
-LONG (${gap>0?'INACTIVO':'ACTIVO'})
-  Entrada : ${f(d.en_l)}
-  Target  : ${f(d.tgt_l)}  (${f(d.rwd_l,1)} pts | $${Math.round(d.rwd_l*50).toLocaleString()})
-  Stop    : ${f(d.stp_l)}  (${f(d.rsk_l,1)} pts)
-  R/R     : 1:${(d.rwd_l/d.rsk_l).toFixed(2)}
-
-REGLA: 9AM PRIME (99.7% WR) · 1 trade/dia · vol bajo · no Lunes`;
+REGLA: 9AM prime | vol bajo | 1 trade/dia | no Lunes`;
   navigator.clipboard.writeText(txt).then(()=>{
     const b=document.querySelector('.btn-copy');
     b.textContent='Copiado!';setTimeout(()=>b.textContent='Copiar plan',2000);
@@ -557,7 +639,6 @@ REGLA: 9AM PRIME (99.7% WR) · 1 trade/dia · vol bajo · no Lunes`;
 
 document.querySelectorAll('input').forEach(i=>i.addEventListener('keydown',e=>{if(e.key==='Enter')calc();}));
 
-// Charts
 function buildCharts(){
   const yrs=BY.map(y=>y.y),pnls=BY.map(y=>y.pnl),wrs=BY.map(y=>y.wr);
   const gc='rgba(30,45,69,0.8)',tc={color:'#475569',font:{size:9}};
